@@ -1,0 +1,6 @@
+com\vetusuarios\ModuloUsuariosApplication.class
+com\vetusuarios\dto\LoginRequest.class
+com\vetusuarios\controller\AuthController.class
+com\vetusuarios\dto\AuthResponse.class
+com\vetusuarios\config\SecurityConfig.class
+com\vetusuarios\service\AuthService.class
