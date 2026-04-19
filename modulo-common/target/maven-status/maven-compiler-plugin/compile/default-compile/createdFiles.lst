@@ -1,9 +1,0 @@
-com\vetcommon\model\Mascota.class
-com\vetcommon\model\Usuario.class
-com\vetcommon\repository\UsuarioRepository.class
-com\vetcommon\service\UsuarioService.class
-com\vetcommon\model\TipoMascota.class
-com\vetcommon\model\EstadoMascota.class
-com\vetcommon\model\Rol.class
-com\vetcommon\model\Sexo.class
-com\vetcommon\repository\MascotaRepository.class
