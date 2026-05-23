@@ -1,6 +1,8 @@
 package com.veterinaria.service;
 
 import com.veterinaria.model.ServicioLavado;
+import com.veterinaria.exception.BusinessException;
+import com.veterinaria.exception.ResourceNotFoundException;
 import com.veterinaria.repository.ServicioLavadoRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,7 @@ public class LavanderiaService {
 
     public ServicioLavado cambiarEstado(Long id, String nuevoEstado) {
         ServicioLavado servicio = servicioLavadoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Servicio no encontrado con id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("ServicioLavado", id));
         validarEstado(nuevoEstado);
         servicio.setEstado(nuevoEstado);
         return servicioLavadoRepository.save(servicio);
@@ -38,14 +40,14 @@ public class LavanderiaService {
 
     public ServicioLavado obtenerPorId(Long id) {
         return servicioLavadoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Servicio no encontrado con id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("ServicioLavado", id));
     }
 
     private void validarEstado(String estado) {
         List<String> estadosValidos = List.of("PENDIENTE", "EN_PROCESO", "TERMINADO", "ENTREGADO");
         if (!estadosValidos.contains(estado)) {
-            throw new IllegalArgumentException("Estado inválido: " + estado +
-                    ". Estados permitidos: " + estadosValidos);
+            throw new BusinessException("Estado inválido: '" + estado +
+                    "'. Estados permitidos: " + estadosValidos);
         }
     }
 }

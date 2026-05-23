@@ -34,7 +34,7 @@ public class LavanderiaController {
         return ResponseEntity.ok(lavanderiaService.obtenerPorId(id));
     }
 
-    @PutMapping("/{id}/estado")
+    @PatchMapping("/{id}/estado")
     public ResponseEntity<ServicioLavado> cambiarEstado(
             @PathVariable Long id,
             @RequestBody Map<String, String> body) {

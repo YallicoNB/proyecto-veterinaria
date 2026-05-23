@@ -4,6 +4,8 @@ import com.veterinaria.model.MascotaAdoptable;
 import com.veterinaria.model.SolicitudAdopcion;
 import com.veterinaria.repository.MascotaAdoptableRepository;
 import com.veterinaria.repository.SolicitudAdopcionRepository;
+import com.veterinaria.exception.BusinessException;
+import com.veterinaria.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class AdopcionService {
     // Lógica para aprobar/rechazar
     public SolicitudAdopcion cambiarEstado(Long id, String nuevoEstado) {
         SolicitudAdopcion solicitud = solicitudRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("SolicitudAdopcion", id));
 
         solicitud.setEstado(nuevoEstado);
 
