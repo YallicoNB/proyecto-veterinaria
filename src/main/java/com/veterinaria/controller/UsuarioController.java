@@ -63,7 +63,7 @@ public class UsuarioController {
             return ResponseEntity.badRequest().body(java.util.Map.of("error", "El usuario ya existe"));
         }
         Usuario usuario = new Usuario(request.getUsername(), request.getPassword(),
-                request.getEmail(), request.getRol());
+            request.getEmail(), request.getRol());
         usuario.setActivo(true);
         Usuario guardado = usuarioService.guardar(usuario);
         return ResponseEntity.ok(UsuarioResponse.fromEntity(guardado));

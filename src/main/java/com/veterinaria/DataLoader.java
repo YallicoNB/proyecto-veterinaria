@@ -5,6 +5,7 @@ import com.veterinaria.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,14 +25,15 @@ public class DataLoader {
             ConsultaRepository consultaRepository,
             VacunaRepository vacunaRepository,
             HistoriaClinicaRepository historiaClinicaRepository
+            , PasswordEncoder passwordEncoder
     ) {
         return args -> {
             if (usuarioRepository.count() == 0) {
                 List<Usuario> usuarios = Arrays.asList(
-                    new Usuario("admin", "admin123", "admin@vet.com", Rol.ADMIN),
-                    new Usuario("veterinario", "vet123", "veterinario@vet.com", Rol.VETERINARIO),
-                    new Usuario("cliente", "cliente123", "cliente@vet.com", Rol.CLIENTE_TIENDA),
-                    new Usuario("empleado", "empleado123", "empleado@vet.com", Rol.EMPLEADO_LAVANDERIA)
+                    new Usuario("admin", passwordEncoder.encode("admin123"), "admin@vet.com", Rol.ADMIN),
+                    new Usuario("veterinario", passwordEncoder.encode("vet123"), "veterinario@vet.com", Rol.VETERINARIO),
+                    new Usuario("cliente", passwordEncoder.encode("cliente123"), "cliente@vet.com", Rol.CLIENTE_TIENDA),
+                    new Usuario("empleado", passwordEncoder.encode("empleado123"), "empleado@vet.com", Rol.EMPLEADO_LAVANDERIA)
                 );
                 usuarioRepository.saveAll(usuarios);
                 System.out.println(">>> Usuarios cargados: " + usuarios.size());

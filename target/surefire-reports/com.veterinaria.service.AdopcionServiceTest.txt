@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.veterinaria.service.AdopcionServiceTest
--------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.226 s -- in com.veterinaria.service.AdopcionServiceTest
