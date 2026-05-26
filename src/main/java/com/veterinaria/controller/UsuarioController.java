@@ -1,10 +1,10 @@
 package com.veterinaria.controller;
 
 import com.veterinaria.dto.request.LoginRequestDTO;
+import com.veterinaria.jwt.JwtService;
 import com.veterinaria.dto.request.UsuarioRequest;
 import com.veterinaria.dto.response.AuthResponseDTO;
 import com.veterinaria.dto.response.UsuarioResponse;
-import com.veterinaria.jwt.JwtService;
 import com.veterinaria.model.Usuario;
 import com.veterinaria.model.Rol;
 import com.veterinaria.service.UsuarioService;
