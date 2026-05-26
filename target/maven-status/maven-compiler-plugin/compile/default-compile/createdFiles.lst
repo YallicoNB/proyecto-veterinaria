@@ -26,9 +26,12 @@ com\veterinaria\dto\request\LoginRequestDTO.class
 com\veterinaria\exception\BusinessException.class
 com\veterinaria\dto\response\AuthResponseDTO.class
 com\veterinaria\dto\response\UsuarioResponse.class
+com\veterinaria\jwt\CustomUserDetailsService.class
+com\veterinaria\jwt\JwtAuthenticationFilter.class
 com\veterinaria\controller\AdopcionController.class
 com\veterinaria\model\DetalleVenta.class
 com\veterinaria\repository\VentaRepository.class
+com\veterinaria\jwt\JwtService.class
 com\veterinaria\service\VacunaService.class
 com\veterinaria\ProyectoVeterinariaApplication.class
 com\veterinaria\model\HistoriaClinica.class

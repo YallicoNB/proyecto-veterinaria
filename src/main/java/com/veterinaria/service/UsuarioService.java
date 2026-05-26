@@ -2,6 +2,7 @@ package com.veterinaria.service;
 
 import com.veterinaria.model.Usuario;
 import com.veterinaria.repository.UsuarioRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -10,9 +11,11 @@ import java.util.Optional;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Usuario> listarTodos() {
@@ -28,6 +31,14 @@ public class UsuarioService {
     }
 
     public Usuario guardar(Usuario usuario) {
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        return usuarioRepository.save(usuario);
+    }
+
+    public Usuario actualizar(Usuario usuario, String passwordRaw) {
+        if (passwordRaw != null && !passwordRaw.isEmpty()) {
+            usuario.setPassword(passwordEncoder.encode(passwordRaw));
+        }
         return usuarioRepository.save(usuario);
     }
 
@@ -49,7 +60,7 @@ public class UsuarioService {
             Usuario u = opt.get();
             Boolean activo = u.getActivo();
             if (activo == null) activo = true;
-            return u.getPassword().equals(password) && activo;
+            return passwordEncoder.matches(password, u.getPassword()) && activo;
         }
         return false;
     }

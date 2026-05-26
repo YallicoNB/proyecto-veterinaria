@@ -2,6 +2,7 @@ package com.veterinaria;
 
 import com.veterinaria.model.*;
 import com.veterinaria.repository.*;
+import com.veterinaria.service.UsuarioService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ public class DataLoader {
 
     @Bean
     CommandLineRunner initDatabase(
+            UsuarioService usuarioService,
             UsuarioRepository usuarioRepository,
             MascotaRepository mascotaRepository,
             ProductoRepository productoRepository,
@@ -33,7 +35,9 @@ public class DataLoader {
                     new Usuario("cliente", "cliente123", "cliente@vet.com", Rol.CLIENTE_TIENDA),
                     new Usuario("empleado", "empleado123", "empleado@vet.com", Rol.EMPLEADO_LAVANDERIA)
                 );
-                usuarioRepository.saveAll(usuarios);
+                for (Usuario u : usuarios) {
+                    usuarioService.guardar(u);
+                }
                 System.out.println(">>> Usuarios cargados: " + usuarios.size());
             }
 
