@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,15 +21,11 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
     private final JwtService jwtService;
-    
 
- public UsuarioController(
-        UsuarioService usuarioService,
-        JwtService jwtService) {
-
-    this.usuarioService = usuarioService;
-    this.jwtService = jwtService;
-}
+    public UsuarioController(UsuarioService usuarioService, JwtService jwtService) {
+        this.usuarioService = usuarioService;
+        this.jwtService = jwtService;
+    }
 
     @GetMapping
     public ResponseEntity<List<UsuarioResponse>> listarTodos() {
@@ -71,7 +66,7 @@ public class UsuarioController {
             return ResponseEntity.badRequest().body(java.util.Map.of("error", "El usuario ya existe"));
         }
         Usuario usuario = new Usuario(request.getUsername(), request.getPassword(),
-                request.getEmail(), request.getRol());
+            request.getEmail(), request.getRol());
         usuario.setActivo(true);
         Usuario guardado = usuarioService.guardar(usuario);
         return ResponseEntity.ok(UsuarioResponse.fromEntity(guardado));
@@ -80,17 +75,10 @@ public class UsuarioController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO request) {
         if (usuarioService.validarCredenciales(request.getUsername(), request.getPassword())) {
-         Usuario usuario = usuarioService.buscarPorUsername(request.getUsername()).get();
-
-String token = jwtService.generarToken(usuario);
-
-return ResponseEntity.ok(
-        new AuthResponseDTO(
-                token,
-                usuario.getUsername(),
-                usuario.getRol().name()
-        )
-);
+            Usuario usuario = usuarioService.buscarPorUsername(request.getUsername()).get();
+            String token = jwtService.generarToken(usuario);
+            return ResponseEntity.ok(new AuthResponseDTO(
+                    token, usuario.getUsername(), usuario.getRol().name()));
         }
         return ResponseEntity.status(401).body(java.util.Map.of("error", "Credenciales inválidas"));
     }

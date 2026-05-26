@@ -19,7 +19,6 @@ public class JwtService {
     }
 
     public String generarToken(Usuario usuario) {
-
         return Jwts.builder()
                 .subject(usuario.getUsername())
                 .claim("rol", usuario.getRol().name())
@@ -28,25 +27,25 @@ public class JwtService {
                 .signWith(key)
                 .compact();
     }
-public String extraerUsername(String token) {
-    return Jwts.parser()
-            .setSigningKey(key)
-            .build()
-            .parseClaimsJws(token)
-            .getBody()
-            .getSubject();
-}
 
-public boolean validarToken(String token) {
-    try {
-        Jwts.parser()
+    public String extraerUsername(String token) {
+        return Jwts.parser()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token);
-
-        return true;
-    } catch (Exception e) {
-        return false;
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
-}
+
+    public boolean validarToken(String token) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
