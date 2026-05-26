@@ -11,16 +11,11 @@ import java.util.Optional;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
-    private PasswordEncoder passwordEncoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
     public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
-        if (passwordEncoder != null) this.passwordEncoder = passwordEncoder;
-    }
-
-    // Constructor adicional para tests y compatibilidad
-    public UsuarioService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Usuario> listarTodos() {
@@ -42,8 +37,10 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario guardarConPassword(Usuario usuario) {
-        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+    public Usuario actualizar(Usuario usuario, String passwordRaw) {
+        if (passwordRaw != null && !passwordRaw.isEmpty()) {
+            usuario.setPassword(passwordEncoder.encode(passwordRaw));
+        }
         return usuarioRepository.save(usuario);
     }
 
@@ -65,17 +62,7 @@ public class UsuarioService {
             Usuario u = opt.get();
             Boolean activo = u.getActivo();
             if (activo == null) activo = true;
-            String stored = u.getPassword();
-            if (stored == null) return false;
-            boolean matches;
-            // Detectar si la contraseña almacenada parece BCrypt (starts with $2a$/$2b$/$2y$)
-            if (stored.startsWith("$2a$") || stored.startsWith("$2b$") || stored.startsWith("$2y$")) {
-                matches = passwordEncoder.matches(password, stored);
-            } else {
-                // Soporte retrocompatibilidad: comparar texto plano
-                matches = stored.equals(password);
-            }
-            return matches && activo;
+            return passwordEncoder.matches(password, u.getPassword()) && activo;
         }
         return false;
     }

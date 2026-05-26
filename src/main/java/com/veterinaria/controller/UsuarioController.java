@@ -4,6 +4,7 @@ import com.veterinaria.dto.request.LoginRequestDTO;
 import com.veterinaria.dto.request.UsuarioRequest;
 import com.veterinaria.dto.response.AuthResponseDTO;
 import com.veterinaria.dto.response.UsuarioResponse;
+import com.veterinaria.jwt.JwtService;
 import com.veterinaria.model.Usuario;
 import com.veterinaria.model.Rol;
 import com.veterinaria.service.UsuarioService;
@@ -19,9 +20,11 @@ import java.util.stream.Collectors;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+    private final JwtService jwtService;
 
-    public UsuarioController(UsuarioService usuarioService) {
+    public UsuarioController(UsuarioService usuarioService, JwtService jwtService) {
         this.usuarioService = usuarioService;
+        this.jwtService = jwtService;
     }
 
     @GetMapping
@@ -73,8 +76,9 @@ public class UsuarioController {
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO request) {
         if (usuarioService.validarCredenciales(request.getUsername(), request.getPassword())) {
             Usuario usuario = usuarioService.buscarPorUsername(request.getUsername()).get();
-            return ResponseEntity.ok(new AuthResponseDTO("token-temporal",
-                    usuario.getUsername(), usuario.getRol().name()));
+            String token = jwtService.generarToken(usuario);
+            return ResponseEntity.ok(new AuthResponseDTO(
+                    token, usuario.getUsername(), usuario.getRol().name()));
         }
         return ResponseEntity.status(401).body(java.util.Map.of("error", "Credenciales inválidas"));
     }
@@ -86,10 +90,7 @@ public class UsuarioController {
                     usuarioExistente.setUsername(request.getUsername());
                     usuarioExistente.setEmail(request.getEmail());
                     usuarioExistente.setRol(request.getRol());
-                    if (request.getPassword() != null && !request.getPassword().isEmpty()) {
-                        usuarioExistente.setPassword(request.getPassword());
-                    }
-                    usuarioService.guardar(usuarioExistente);
+                    usuarioService.actualizar(usuarioExistente, request.getPassword());
                     return ResponseEntity.ok(UsuarioResponse.fromEntity(usuarioExistente));
                 })
                 .orElse(ResponseEntity.notFound().build());
