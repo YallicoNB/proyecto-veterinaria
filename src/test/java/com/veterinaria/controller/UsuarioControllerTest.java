@@ -21,6 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UsuarioController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@org.springframework.test.context.ActiveProfiles("test")
+// Activa perfil pruebas para el test
 class UsuarioControllerTest {
 
     @Autowired
@@ -28,6 +30,10 @@ class UsuarioControllerTest {
 
     @MockBean
     private UsuarioService usuarioService;
+
+    @MockBean
+    // Simula servicio de tokens jwt
+    private com.veterinaria.jwt.JwtService jwtService;
 
     @Test
     void listarTodos_debeRetornar200() throws Exception {

@@ -3,6 +3,8 @@ package com.veterinaria.service;
 import com.veterinaria.model.Rol;
 import com.veterinaria.model.Usuario;
 import com.veterinaria.repository.UsuarioRepository;
+// Importa codificador de contraseñas Spring
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,6 +23,10 @@ public class UsuarioServiceTest {
 
     @Mock
     private UsuarioRepository usuarioRepository;
+
+    @Mock
+    // Mock para codificador de contraseñas
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UsuarioService usuarioService;
@@ -59,6 +65,8 @@ public class UsuarioServiceTest {
     @Test
     void testGuardar() {
         Usuario usuario = new Usuario("test", "pass", "test@test.com", Rol.ADMIN);
+        // Simula encriptar la contraseña cruda
+        when(passwordEncoder.encode("pass")).thenReturn("encodedPass");
         when(usuarioRepository.save(usuario)).thenReturn(usuario);
 
         Usuario resultado = usuarioService.guardar(usuario);
@@ -102,6 +110,8 @@ public class UsuarioServiceTest {
         Usuario usuario = new Usuario("admin", "pass123", "admin@test.com", Rol.ADMIN);
         usuario.setActivo(true);
         when(usuarioRepository.findByUsername("admin")).thenReturn(Optional.of(usuario));
+        // Simula validacion correcta de contraseña
+        when(passwordEncoder.matches("pass123", "pass123")).thenReturn(true);
 
         boolean resultado = usuarioService.validarCredenciales("admin", "pass123");
 
@@ -113,6 +123,8 @@ public class UsuarioServiceTest {
         Usuario usuario = new Usuario("admin", "pass123", "admin@test.com", Rol.ADMIN);
         usuario.setActivo(true);
         when(usuarioRepository.findByUsername("admin")).thenReturn(Optional.of(usuario));
+        // Simula validacion incorrecta de contraseña
+        when(passwordEncoder.matches("wrong", "pass123")).thenReturn(false);
 
         boolean resultado = usuarioService.validarCredenciales("admin", "wrong");
 
@@ -124,6 +136,8 @@ public class UsuarioServiceTest {
         Usuario usuario = new Usuario("admin", "pass123", "admin@test.com", Rol.ADMIN);
         usuario.setActivo(false);
         when(usuarioRepository.findByUsername("admin")).thenReturn(Optional.of(usuario));
+        // Simula validacion para cuenta inactiva
+        when(passwordEncoder.matches("pass123", "pass123")).thenReturn(true);
 
         boolean resultado = usuarioService.validarCredenciales("admin", "pass123");
 

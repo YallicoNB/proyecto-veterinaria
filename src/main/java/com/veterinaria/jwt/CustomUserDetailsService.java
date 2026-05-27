@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@Service("jwtUserDetailsService")
+@org.springframework.context.annotation.Primary
+// Define bean primario de seguridad
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UsuarioRepository usuarioRepository;
