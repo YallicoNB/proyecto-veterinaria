@@ -1,0 +1,53 @@
+package com.veterinaria.service;
+
+import com.veterinaria.model.ServicioLavado;
+import com.veterinaria.exception.BusinessException;
+import com.veterinaria.exception.ResourceNotFoundException;
+import com.veterinaria.repository.ServicioLavadoRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class LavanderiaService {
+
+    private final ServicioLavadoRepository servicioLavadoRepository;
+
+    public LavanderiaService(ServicioLavadoRepository servicioLavadoRepository) {
+        this.servicioLavadoRepository = servicioLavadoRepository;
+    }
+
+    public ServicioLavado crearServicio(ServicioLavado servicio) {
+        servicio.setEstado("PENDIENTE");
+        return servicioLavadoRepository.save(servicio);
+    }
+
+    public ServicioLavado cambiarEstado(Long id, String nuevoEstado) {
+        ServicioLavado servicio = servicioLavadoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("ServicioLavado", id));
+        validarEstado(nuevoEstado);
+        servicio.setEstado(nuevoEstado);
+        return servicioLavadoRepository.save(servicio);
+    }
+
+    public List<ServicioLavado> listarPendientes() {
+        return servicioLavadoRepository.findByEstado("PENDIENTE");
+    }
+
+    public List<ServicioLavado> listarTodos() {
+        return servicioLavadoRepository.findAll();
+    }
+
+    public ServicioLavado obtenerPorId(Long id) {
+        return servicioLavadoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("ServicioLavado", id));
+    }
+
+    private void validarEstado(String estado) {
+        List<String> estadosValidos = List.of("PENDIENTE", "EN_PROCESO", "TERMINADO", "ENTREGADO");
+        if (!estadosValidos.contains(estado)) {
+            throw new BusinessException("Estado inválido: '" + estado +
+                    "'. Estados permitidos: " + estadosValidos);
+        }
+    }
+}
