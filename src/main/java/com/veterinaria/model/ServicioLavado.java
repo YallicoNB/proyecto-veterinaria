@@ -1,5 +1,6 @@
 package com.veterinaria.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "servicios_lavado")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ServicioLavado {
 
     @Id

@@ -1,5 +1,6 @@
 package com.veterinaria.controller;
 
+import com.veterinaria.dto.response.ServicioLavadoResponse;
 import com.veterinaria.model.ServicioLavado;
 import com.veterinaria.service.LavanderiaService;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/lavanderia/servicio")
@@ -20,29 +22,39 @@ public class LavanderiaController {
     }
 
     @PostMapping
-    public ResponseEntity<ServicioLavado> crearServicio(@RequestBody ServicioLavado servicio) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(lavanderiaService.crearServicio(servicio));
+    public ResponseEntity<ServicioLavadoResponse> crearServicio(@RequestBody ServicioLavado servicio) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ServicioLavadoResponse.fromEntity(lavanderiaService.crearServicio(servicio)));
     }
 
     @GetMapping
-    public ResponseEntity<List<ServicioLavado>> listarTodos() {
-        return ResponseEntity.ok(lavanderiaService.listarTodos());
+    public ResponseEntity<List<ServicioLavadoResponse>> listarTodos() {
+        List<ServicioLavadoResponse> response = lavanderiaService.listarTodos()
+                .stream()
+                .map(ServicioLavadoResponse::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ServicioLavado> obtenerPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(lavanderiaService.obtenerPorId(id));
+    public ResponseEntity<ServicioLavadoResponse> obtenerPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(ServicioLavadoResponse.fromEntity(lavanderiaService.obtenerPorId(id)));
     }
 
     @PatchMapping("/{id}/estado")
-    public ResponseEntity<ServicioLavado> cambiarEstado(
+    public ResponseEntity<ServicioLavadoResponse> cambiarEstado(
             @PathVariable Long id,
             @RequestBody Map<String, String> body) {
-        return ResponseEntity.ok(lavanderiaService.cambiarEstado(id, body.get("estado")));
+        return ResponseEntity.ok(ServicioLavadoResponse.fromEntity(
+                lavanderiaService.cambiarEstado(id, body.get("estado"))));
     }
 
     @GetMapping("/pendientes")
-    public ResponseEntity<List<ServicioLavado>> listarPendientes() {
-        return ResponseEntity.ok(lavanderiaService.listarPendientes());
+    public ResponseEntity<List<ServicioLavadoResponse>> listarPendientes() {
+        List<ServicioLavadoResponse> response = lavanderiaService.listarPendientes()
+                .stream()
+                .map(ServicioLavadoResponse::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 }

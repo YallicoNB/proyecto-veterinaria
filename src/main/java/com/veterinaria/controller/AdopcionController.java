@@ -1,10 +1,13 @@
 package com.veterinaria.controller;
 
+import com.veterinaria.dto.response.MascotaAdoptableResponse;
+import com.veterinaria.dto.response.SolicitudAdopcionResponse;
 import com.veterinaria.model.MascotaAdoptable;
 import com.veterinaria.model.SolicitudAdopcion;
 import com.veterinaria.service.AdopcionService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/adopcion")
@@ -17,17 +20,20 @@ public class AdopcionController {
     }
 
     @GetMapping("/disponibles")
-    public List<MascotaAdoptable> getDisponibles() {
-        return adopcionService.listarDisponibles();
+    public List<MascotaAdoptableResponse> getDisponibles() {
+        return adopcionService.listarDisponibles()
+                .stream()
+                .map(MascotaAdoptableResponse::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/solicitudes")
-    public SolicitudAdopcion enviarSolicitud(@RequestBody SolicitudAdopcion solicitud) {
-        return adopcionService.crearSolicitud(solicitud);
+    public SolicitudAdopcionResponse enviarSolicitud(@RequestBody SolicitudAdopcion solicitud) {
+        return SolicitudAdopcionResponse.fromEntity(adopcionService.crearSolicitud(solicitud));
     }
 
     @PatchMapping("/solicitudes/{id}/estado")
-    public SolicitudAdopcion actualizarEstado(@PathVariable Long id, @RequestParam String estado) {
-        return adopcionService.cambiarEstado(id, estado);
+    public SolicitudAdopcionResponse actualizarEstado(@PathVariable Long id, @RequestParam String estado) {
+        return SolicitudAdopcionResponse.fromEntity(adopcionService.cambiarEstado(id, estado));
     }
 }

@@ -2,6 +2,7 @@ package com.veterinaria.controller;
 
 import com.veterinaria.dto.request.ProductoRequest;
 import com.veterinaria.dto.response.ProductoResponse;
+import com.veterinaria.dto.response.VentaResponse;
 import com.veterinaria.model.Producto;
 import com.veterinaria.model.Venta;
 import com.veterinaria.service.ProductoService;
@@ -89,19 +90,23 @@ public class TiendaController {
     // rutas para ventas
 
     @PostMapping("/ventas")
-    public ResponseEntity<Venta> crearVenta(@Valid @RequestBody Venta venta) {
-        return ResponseEntity.ok(ventaService.registrarVenta(venta));
+    public ResponseEntity<VentaResponse> crearVenta(@Valid @RequestBody Venta venta) {
+        return ResponseEntity.ok(VentaResponse.fromEntity(ventaService.registrarVenta(venta)));
     }
 
     @GetMapping("/ventas")
-    public ResponseEntity<List<Venta>> listarVentas() {
-        return ResponseEntity.ok(ventaService.listarTodas());
+    public ResponseEntity<List<VentaResponse>> listarVentas() {
+        List<VentaResponse> response = ventaService.listarTodas()
+                .stream()
+                .map(VentaResponse::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/ventas/{id}")
-    public ResponseEntity<Venta> obtenerVenta(@PathVariable Long id) {
+    public ResponseEntity<VentaResponse> obtenerVenta(@PathVariable Long id) {
         return ventaService.buscarPorId(id)
-                .map(ResponseEntity::ok)
+                .map(v -> ResponseEntity.ok(VentaResponse.fromEntity(v)))
                 .orElse(ResponseEntity.notFound().build());
     }
 }

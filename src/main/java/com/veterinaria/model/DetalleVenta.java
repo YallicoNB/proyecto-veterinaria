@@ -1,5 +1,6 @@
 package com.veterinaria.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "detalles_venta")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class DetalleVenta {
 
     @Id

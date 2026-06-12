@@ -2,6 +2,8 @@ package com.veterinaria.config;
 
 import com.veterinaria.jwt.JwtAuthenticationFilter;
 import com.veterinaria.service.CustomUserDetailsService;
+
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -27,19 +29,22 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    @org.springframework.beans.factory.annotation.Autowired
     // Maneja respuestas no autenticadas personalizadas
-    private CustomAuthenticationEntryPoint authenticationEntryPoint;
-    @org.springframework.beans.factory.annotation.Autowired
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     // Maneja respuestas de accesos prohibidos
-    private CustomAccessDeniedHandler accessDeniedHandler;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
     @org.springframework.beans.factory.annotation.Value("${jwt.secret}")
     // Clave secreta cargada desde propiedades
     private String jwtSecret;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService,
+            JwtAuthenticationFilter jwtAuthenticationFilter,
+            CustomAuthenticationEntryPoint authenticationEntryPoint,
+            CustomAccessDeniedHandler accessDeniedHandler) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.authenticationEntryPoint = authenticationEntryPoint;
+        this.accessDeniedHandler = accessDeniedHandler;
     }
 
     @Bean
@@ -63,54 +68,50 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // Habilita configuracion de filtros cors
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            // Configura manejadores personalizados de errores
-            .exceptionHandling(exceptions -> exceptions
-                // Asigna manejador para no autenticados
-                .authenticationEntryPoint(authenticationEntryPoint)
-                // Asigna manejador para accesos prohibidos
-                .accessDeniedHandler(accessDeniedHandler)
-            )
-            .authorizeHttpRequests(auth -> auth
+                // Habilita configuracion de filtros cors
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // Configura manejadores personalizados de errores
+                .exceptionHandling(exceptions -> exceptions
+                        // Asigna manejador para no autenticados
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        // Asigna manejador para accesos prohibidos
+                        .accessDeniedHandler(accessDeniedHandler))
+                .authorizeHttpRequests(auth -> auth
 
-                .requestMatchers(HttpMethod.POST, "/api/usuarios/registro").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/usuarios/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/registro").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/login").permitAll()
 
-                .requestMatchers(HttpMethod.GET, "/api/adopcion/disponibles").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/adopcion/disponibles").permitAll()
 
-                .requestMatchers(HttpMethod.GET, "/api/tienda/productos").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/tienda/productos/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/tienda/productos").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/tienda/productos/{id}").permitAll()
 
-                .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
 
-                .requestMatchers("/api/veterinaria/**").hasAnyRole("ADMIN", "VETERINARIO")
+                        .requestMatchers("/api/veterinaria/**").hasAnyRole("ADMIN", "VETERINARIO")
 
-                .requestMatchers("/api/lavanderia/**").hasAnyRole("ADMIN", "EMPLEADO_LAVANDERIA")
+                        .requestMatchers("/api/lavanderia/**").hasAnyRole("ADMIN", "EMPLEADO_LAVANDERIA")
 
-                .requestMatchers(HttpMethod.POST, "/api/tienda/ventas").hasAnyRole("ADMIN", "CLIENTE_TIENDA")
-                .requestMatchers(HttpMethod.POST, "/api/tienda/productos").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/tienda/productos/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/tienda/productos/**").hasRole("ADMIN")
-                .requestMatchers("/api/tienda/**").hasAnyRole("ADMIN", "CLIENTE_TIENDA")
+                        .requestMatchers(HttpMethod.POST, "/api/tienda/ventas").hasAnyRole("ADMIN", "CLIENTE_TIENDA")
+                        .requestMatchers(HttpMethod.POST, "/api/tienda/productos").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/tienda/productos/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/tienda/productos/**").hasRole("ADMIN")
+                        .requestMatchers("/api/tienda/**").hasAnyRole("ADMIN", "CLIENTE_TIENDA")
 
-                .requestMatchers(HttpMethod.POST, "/api/adopcion/solicitudes").hasAnyRole("ADMIN", "ADOPTANTE")
-                .requestMatchers(HttpMethod.PATCH, "/api/adopcion/solicitudes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/adopcion/solicitudes").hasAnyRole("ADMIN", "ADOPTANTE")
+                        .requestMatchers(HttpMethod.PATCH, "/api/adopcion/solicitudes/**").hasRole("ADMIN")
 
-                .anyRequest().authenticated()
-            )
-            // Configura servidor de recursos oauth2
-            .oauth2ResourceServer(oauth2 -> oauth2
-                // Habilita decodificacion y mapeo jwt
-                .jwt(jwt -> jwt
-                    // Asigna decodificador de tokens local
-                    .decoder(jwtDecoder())
-                    // Asigna conversor de roles local
-                    .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                )
-            );
+                        .anyRequest().authenticated())
+                // Configura servidor de recursos oauth2
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        // Habilita decodificacion y mapeo jwt
+                        .jwt(jwt -> jwt
+                                // Asigna decodificador de tokens local
+                                .decoder(jwtDecoder())
+                                // Asigna conversor de roles local
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter())));
 
         return http.build();
     }
@@ -141,8 +142,7 @@ public class SecurityConfig {
     public org.springframework.security.oauth2.jwt.JwtDecoder jwtDecoder() {
         // Genera clave secreta desde propiedades
         javax.crypto.spec.SecretKeySpec secretKey = new javax.crypto.spec.SecretKeySpec(
-            jwtSecret.getBytes(), "HmacSHA256"
-        );
+                jwtSecret.getBytes(), "HmacSHA256");
         // Retorna decodificador con clave configurada
         return org.springframework.security.oauth2.jwt.NimbusJwtDecoder.withSecretKey(secretKey).build();
     }
@@ -151,16 +151,14 @@ public class SecurityConfig {
     // Convierte claims jwt en GrantedAuthority
     public org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter jwtAuthenticationConverter() {
         // Instancia conversor de autoridades jwt
-        org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter =
-            new org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter();
+        org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter();
         // Asigna claim de rol para mapear
         grantedAuthoritiesConverter.setAuthoritiesClaimName("rol");
         // Asigna prefijo de roles spring
         grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
 
         // Instancia conversor principal de jwt
-        org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter jwtAuthenticationConverter =
-            new org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter();
+        org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter jwtAuthenticationConverter = new org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter();
         // Registra conversor de autoridades personalizado
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         // Retorna conversor de jwt configurado
@@ -169,13 +167,15 @@ public class SecurityConfig {
 
     @Bean
     // Desactiva el registro automatico del filtro
-    public org.springframework.boot.web.servlet.FilterRegistrationBean<JwtAuthenticationFilter> registration(JwtAuthenticationFilter filter) {
+    public org.springframework.boot.web.servlet.FilterRegistrationBean<JwtAuthenticationFilter> registration(
+            JwtAuthenticationFilter filter) {
         // Instancia el bean de registro filtro
-        org.springframework.boot.web.servlet.FilterRegistrationBean<JwtAuthenticationFilter> registration =
-            new org.springframework.boot.web.servlet.FilterRegistrationBean<>(filter);
+        org.springframework.boot.web.servlet.FilterRegistrationBean<JwtAuthenticationFilter> registration = new org.springframework.boot.web.servlet.FilterRegistrationBean<>(
+                filter);
         // Deshabilita ejecucion en servlet global
         registration.setEnabled(false);
         // Retorna registro de filtro configurado
         return registration;
     }
+
 }
