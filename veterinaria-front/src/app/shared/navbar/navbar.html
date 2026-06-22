@@ -1,0 +1,13 @@
+<header class="navbar">
+  <a class="navbar-brand" routerLink="/dashboard">
+    <i class="bi bi-heart-pulse"></i> Veterinaria
+  </a>
+  @if (auth.isAuthenticated()) {
+    <div class="navbar-user">
+      <i class="bi bi-person-circle"></i>
+      <span>{{ auth.getUsername() }}</span>
+      <span>({{ auth.getRol() }})</span>
+      <button (click)="auth.logout()">Salir</button>
+    </div>
+  }
+</header>

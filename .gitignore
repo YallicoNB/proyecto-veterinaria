@@ -3,3 +3,10 @@ target/
 *.log
 .idea/
 .vscode/
+
+# Angular
+veterinaria-front/node_modules/
+veterinaria-front/dist/
+veterinaria-front/.angular/
+veterinaria-front/tmp/
+*.tsbuildinfo

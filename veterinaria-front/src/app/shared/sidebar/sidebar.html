@@ -1,0 +1,51 @@
+<aside class="sidebar">
+  <a routerLink="/dashboard" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:true}">
+    <i class="bi bi-speedometer2"></i> Dashboard
+  </a>
+
+  @if (tieneRol(['ADMIN', 'VETERINARIO', 'CLIENTE_TIENDA'])) {
+    <div class="sidebar-section">Tienda</div>
+    <a routerLink="/tienda/productos" routerLinkActive="active-link">
+      <i class="bi bi-box-seam"></i> Productos
+    </a>
+    @if (tieneRol(['ADMIN', 'CLIENTE_TIENDA'])) {
+      <a routerLink="/tienda/ventas" routerLinkActive="active-link">
+        <i class="bi bi-cart"></i> Ventas
+      </a>
+    }
+  }
+
+  @if (tieneRol(['ADMIN', 'VETERINARIO'])) {
+    <div class="sidebar-section">Veterinaria</div>
+    <a routerLink="/veterinaria/consultas" routerLinkActive="active-link">
+      <i class="bi bi-clipboard-pulse"></i> Consultas
+    </a>
+    <a routerLink="/veterinaria/vacunas" routerLinkActive="active-link">
+      <i class="bi bi-syringe"></i> Vacunas
+    </a>
+  }
+
+  @if (tieneRol(['ADMIN', 'EMPLEADO_LAVANDERIA'])) {
+    <div class="sidebar-section">Lavandería</div>
+    <a routerLink="/lavanderia/servicios" routerLinkActive="active-link">
+      <i class="bi bi-droplet"></i> Servicios
+    </a>
+  }
+
+  @if (tieneRol(['ADMIN', 'ADOPTANTE'])) {
+    <div class="sidebar-section">Adopción</div>
+    <a routerLink="/adopcion/disponibles" routerLinkActive="active-link">
+      <i class="bi bi-heart"></i> Mascotas
+    </a>
+    <a routerLink="/adopcion/solicitudes" routerLinkActive="active-link">
+      <i class="bi bi-file-text"></i> Solicitudes
+    </a>
+  }
+
+  @if (tieneRol(['ADMIN'])) {
+    <div class="sidebar-section">Administración</div>
+    <a routerLink="/usuarios" routerLinkActive="active-link">
+      <i class="bi bi-people"></i> Usuarios
+    </a>
+  }
+</aside>

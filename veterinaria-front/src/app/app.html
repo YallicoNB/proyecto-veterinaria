@@ -1,0 +1,14 @@
+<app-navbar></app-navbar>
+<div class="app-layout">
+  @if (auth.isAuthenticated()) {
+    <app-sidebar></app-sidebar>
+  }
+  <div class="app-content">
+    <main class="app-main">
+      <router-outlet />
+    </main>
+    @if (auth.isAuthenticated()) {
+      <app-footer></app-footer>
+    }
+  </div>
+</div>
