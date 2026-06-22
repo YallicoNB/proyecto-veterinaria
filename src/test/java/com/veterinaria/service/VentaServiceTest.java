@@ -74,6 +74,7 @@ public class VentaServiceTest {
         Venta venta = new Venta();
         venta.addDetalle(detalle);
 
+        when(productoService.buscarPorId(1L)).thenReturn(Optional.of(producto));
         when(ventaRepository.save(venta)).thenReturn(venta);
 
         Venta resultado = ventaService.registrarVenta(venta);
@@ -88,6 +89,7 @@ public class VentaServiceTest {
         Producto producto = new Producto();
         producto.setId(1L);
         producto.setPrecio(250.0);
+        producto.setStock(5);
 
         DetalleVenta detalle = new DetalleVenta();
         detalle.setProducto(producto);

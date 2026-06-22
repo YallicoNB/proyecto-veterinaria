@@ -1,8 +1,11 @@
 package com.veterinaria.controller;
 
+import com.veterinaria.dto.request.DetalleVentaRequest;
 import com.veterinaria.dto.request.ProductoRequest;
+import com.veterinaria.dto.request.VentaRequest;
 import com.veterinaria.dto.response.ProductoResponse;
 import com.veterinaria.dto.response.VentaResponse;
+import com.veterinaria.model.DetalleVenta;
 import com.veterinaria.model.Producto;
 import com.veterinaria.model.Venta;
 import com.veterinaria.service.ProductoService;
@@ -87,10 +90,19 @@ public class TiendaController {
         return ResponseEntity.ok(response);
     }
 
-    // rutas para ventas
+    // ── Ventas ────────────────────────────────────────────────────
 
     @PostMapping("/ventas")
-    public ResponseEntity<VentaResponse> crearVenta(@Valid @RequestBody Venta venta) {
+    public ResponseEntity<VentaResponse> crearVenta(@Valid @RequestBody VentaRequest request) {
+        Venta venta = new Venta();
+        for (DetalleVentaRequest dto : request.getDetalles()) {
+            DetalleVenta detalle = new DetalleVenta();
+            Producto producto = new Producto();
+            producto.setId(dto.getProductoId());
+            detalle.setProducto(producto);
+            detalle.setCantidad(dto.getCantidad());
+            venta.addDetalle(detalle);
+        }
         return ResponseEntity.ok(VentaResponse.fromEntity(ventaService.registrarVenta(venta)));
     }
 

@@ -4,6 +4,7 @@ import com.veterinaria.model.Mascota;
 import com.veterinaria.model.ServicioLavado;
 import com.veterinaria.model.TipoServicio;
 import com.veterinaria.service.LavanderiaService;
+import com.veterinaria.service.MascotaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -23,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(LavanderiaController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @org.springframework.test.context.ActiveProfiles("test")
-// Activa perfil pruebas para el test
 class LavanderiaControllerTest {
 
     @Autowired
@@ -32,23 +33,27 @@ class LavanderiaControllerTest {
     @MockBean
     private LavanderiaService lavanderiaService;
 
+    @MockBean
+    private MascotaService mascotaService;
+
     @Test
     void crearServicio_debeRetornar201() throws Exception {
+        Mascota mascota = new Mascota();
+        mascota.setId(1L);
         ServicioLavado servicio = new ServicioLavado();
         servicio.setTipoServicio(TipoServicio.BAÑO);
         servicio.setPrecio(150.0);
-        Mascota mascota = new Mascota();
-        mascota.setId(1L);
         servicio.setMascota(mascota);
 
+        when(mascotaService.buscarPorId(1L)).thenReturn(Optional.of(mascota));
         when(lavanderiaService.crearServicio(any(ServicioLavado.class))).thenReturn(servicio);
 
         String json = """
                 {
+                    "mascotaId": 1,
                     "tipoServicio": "BAÑO",
                     "precio": 150.0,
-                    "fechaHora": "2026-06-01T10:00:00",
-                    "mascota": {"id": 1}
+                    "fechaHora": "2026-06-01T10:00:00"
                 }
                 """;
 

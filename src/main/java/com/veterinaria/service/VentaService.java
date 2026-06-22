@@ -1,5 +1,7 @@
 package com.veterinaria.service;
 
+import com.veterinaria.exception.BusinessException;
+import com.veterinaria.exception.ResourceNotFoundException;
 import com.veterinaria.model.DetalleVenta;
 import com.veterinaria.model.Producto;
 import com.veterinaria.model.Venta;
@@ -33,28 +35,33 @@ public class VentaService {
     // registramos venta (uso transactional para revertir si falla)
     @Transactional
     public Venta registrarVenta(Venta venta) {
-        // linkeamos venta bidireccional
         if (venta.getDetalles() != null) {
+            // validar stock suficiente antes de procesar
             for (DetalleVenta detalle : venta.getDetalles()) {
                 detalle.setVenta(venta);
-                
-                // traer precio del bd si no se envio
+                Producto producto = productoService.buscarPorId(detalle.getProducto().getId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Producto", detalle.getProducto().getId()));
+                if (producto.getStock() == null || producto.getStock() < detalle.getCantidad()) {
+                    throw new BusinessException(
+                            "Stock insuficiente para el producto '" + producto.getNombre() +
+                            "': disponible " + producto.getStock() +
+                            ", solicitado " + detalle.getCantidad());
+                }
                 if (detalle.getPrecioUnitario() == null) {
-                    Optional<Producto> p = productoService.buscarPorId(detalle.getProducto().getId());
-                    p.ifPresent(producto -> detalle.setPrecioUnitario(producto.getPrecio()));
+                    detalle.setPrecioUnitario(producto.getPrecio());
                 }
             }
         }
-        
+
         Venta guardada = ventaRepository.save(venta);
-        
+
         // restamos stock en productos
         if (guardada.getDetalles() != null) {
             for (DetalleVenta detalle : guardada.getDetalles()) {
                 productoService.actualizarStock(detalle.getProducto().getId(), detalle.getCantidad());
             }
         }
-        
+
         return guardada;
     }
 }

@@ -1,5 +1,9 @@
 package com.veterinaria.controller;
 
+import com.veterinaria.dto.request.AtenderConsultaRequest;
+import com.veterinaria.dto.request.ConsultaRequest;
+import com.veterinaria.dto.request.HistoriaClinicaRequest;
+import com.veterinaria.dto.request.VacunaRequest;
 import com.veterinaria.dto.response.ConsultaResponse;
 import com.veterinaria.dto.response.HistoriaClinicaResponse;
 import com.veterinaria.dto.response.VacunaResponse;
@@ -18,13 +22,16 @@ public class VeterinariaController {
     private final HistoriaClinicaService historiaClinicaService;
     private final ConsultaService consultaService;
     private final VacunaService vacunaService;
+    private final MascotaService mascotaService;
 
     public VeterinariaController(HistoriaClinicaService historiaClinicaService,
             ConsultaService consultaService,
-            VacunaService vacunaService) {
+            VacunaService vacunaService,
+            MascotaService mascotaService) {
         this.historiaClinicaService = historiaClinicaService;
         this.consultaService = consultaService;
         this.vacunaService = vacunaService;
+        this.mascotaService = mascotaService;
     }
 
     // ── Historia Clínica ──────────────────────────────────────────
@@ -39,8 +46,14 @@ public class VeterinariaController {
     }
 
     @PostMapping("/historia")
-    public ResponseEntity<HistoriaClinicaResponse> crearHistoria(@Valid @RequestBody HistoriaClinica historia) {
-        return ResponseEntity.ok(HistoriaClinicaResponse.fromEntity(historiaClinicaService.guardar(historia)));
+    public ResponseEntity<HistoriaClinicaResponse> crearHistoria(@Valid @RequestBody HistoriaClinicaRequest request) {
+        HistoriaClinica entity = new HistoriaClinica();
+        entity.setMascota(mascotaService.buscarPorId(request.getMascotaId())
+                .orElseThrow(() -> new RuntimeException("Mascota no encontrada")));
+        entity.setMotivoConsulta(request.getMotivoConsulta());
+        entity.setDiagnostico(request.getDiagnostico());
+        entity.setTratamiento(request.getTratamiento());
+        return ResponseEntity.ok(HistoriaClinicaResponse.fromEntity(historiaClinicaService.guardar(entity)));
     }
 
     @DeleteMapping("/historia/{id}")
@@ -55,8 +68,17 @@ public class VeterinariaController {
     // ── Consultas ─────────────────────────────────────────────────
 
     @PostMapping("/consulta")
-    public ResponseEntity<ConsultaResponse> agendarConsulta(@Valid @RequestBody Consulta consulta) {
-        return ResponseEntity.ok(ConsultaResponse.fromEntity(consultaService.agendar(consulta)));
+    public ResponseEntity<ConsultaResponse> agendarConsulta(@Valid @RequestBody ConsultaRequest request) {
+        Consulta entity = new Consulta();
+        entity.setMascota(mascotaService.buscarPorId(request.getMascotaId())
+                .orElseThrow(() -> new RuntimeException("Mascota no encontrada")));
+        if (request.getVeterinarioId() != null) {
+            Usuario vet = new Usuario();
+            vet.setId(request.getVeterinarioId());
+            entity.setVeterinario(vet);
+        }
+        entity.setSintomas(request.getSintomas());
+        return ResponseEntity.ok(ConsultaResponse.fromEntity(consultaService.agendar(entity)));
     }
 
     @GetMapping("/consulta/mascota/{id}")
@@ -81,7 +103,10 @@ public class VeterinariaController {
     }
 
     @PutMapping("/consulta/{id}/atender")
-    public ResponseEntity<?> atenderConsulta(@PathVariable Long id, @Valid @RequestBody Consulta datos) {
+    public ResponseEntity<?> atenderConsulta(@PathVariable Long id, @Valid @RequestBody AtenderConsultaRequest request) {
+        Consulta datos = new Consulta();
+        datos.setDiagnostico(request.getDiagnostico());
+        datos.setReceta(request.getReceta());
         return consultaService.atender(id, datos)
                 .map(c -> ResponseEntity.ok(ConsultaResponse.fromEntity(c)))
                 .orElse(ResponseEntity.notFound().build());
@@ -97,8 +122,15 @@ public class VeterinariaController {
     // ── Vacunas ───────────────────────────────────────────────────
 
     @PostMapping("/vacuna")
-    public ResponseEntity<VacunaResponse> registrarVacuna(@Valid @RequestBody Vacuna vacuna) {
-        return ResponseEntity.ok(VacunaResponse.fromEntity(vacunaService.registrar(vacuna)));
+    public ResponseEntity<VacunaResponse> registrarVacuna(@Valid @RequestBody VacunaRequest request) {
+        Vacuna entity = new Vacuna();
+        entity.setMascota(mascotaService.buscarPorId(request.getMascotaId())
+                .orElseThrow(() -> new RuntimeException("Mascota no encontrada")));
+        entity.setNombreVacuna(request.getNombreVacuna());
+        entity.setFechaAplicacion(request.getFechaAplicacion());
+        entity.setFechaProxima(request.getFechaProxima());
+        entity.setLote(request.getLote());
+        return ResponseEntity.ok(VacunaResponse.fromEntity(vacunaService.registrar(entity)));
     }
 
     @GetMapping("/vacuna/mascota/{id}")

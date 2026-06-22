@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(VeterinariaController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @org.springframework.test.context.ActiveProfiles("test")
-// Activa perfil pruebas para el test
 class VeterinariaControllerTest {
 
     @Autowired
@@ -38,6 +37,9 @@ class VeterinariaControllerTest {
     @MockBean
     private VacunaService vacunaService;
 
+    @MockBean
+    private MascotaService mascotaService;
+
     @Test
     void obtenerHistoria_debeRetornar200() throws Exception {
         when(historiaClinicaService.buscarPorMascota(1L)).thenReturn(List.of(new HistoriaClinica()));
@@ -49,18 +51,19 @@ class VeterinariaControllerTest {
 
     @Test
     void agendarConsulta_debeRetornar200() throws Exception {
-        Consulta consulta = new Consulta();
-        consulta.setSintomas("Tos");
         Mascota mascota = new Mascota();
         mascota.setId(1L);
+        Consulta consulta = new Consulta();
+        consulta.setSintomas("Tos");
         consulta.setMascota(mascota);
 
+        when(mascotaService.buscarPorId(1L)).thenReturn(Optional.of(mascota));
         when(consultaService.agendar(any(Consulta.class))).thenReturn(consulta);
 
         String json = """
                 {
-                    "sintomas": "Tos",
-                    "mascota": {"id": 1}
+                    "mascotaId": 1,
+                    "sintomas": "Tos"
                 }
                 """;
 
@@ -101,9 +104,7 @@ class VeterinariaControllerTest {
         String json = """
                 {
                     "diagnostico": "Infección",
-                    "receta": "Antibiótico",
-                    "sintomas": "Fiebre",
-                    "mascota": {"id": 1}
+                    "receta": "Antibiótico"
                 }
                 """;
 
@@ -127,14 +128,19 @@ class VeterinariaControllerTest {
 
     @Test
     void registrarVacuna_debeRetornar200() throws Exception {
+        Mascota mascota = new Mascota();
+        mascota.setId(1L);
         Vacuna vacuna = new Vacuna();
         vacuna.setNombreVacuna("Rabia");
+        vacuna.setMascota(mascota);
+
+        when(mascotaService.buscarPorId(1L)).thenReturn(Optional.of(mascota));
         when(vacunaService.registrar(any(Vacuna.class))).thenReturn(vacuna);
 
         String json = """
                 {
-                    "nombreVacuna": "Rabia",
-                    "mascota": {"id": 1}
+                    "mascotaId": 1,
+                    "nombreVacuna": "Rabia"
                 }
                 """;
 

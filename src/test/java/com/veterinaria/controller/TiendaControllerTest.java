@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(TiendaController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @org.springframework.test.context.ActiveProfiles("test")
-// Activa perfil pruebas para el test
 class TiendaControllerTest {
 
     @Autowired
@@ -118,7 +117,7 @@ class TiendaControllerTest {
         String json = """
                 {
                     "detalles": [
-                        {"producto": {"id": 1}, "cantidad": 2, "precioUnitario": 100.0}
+                        {"productoId": 1, "cantidad": 2}
                     ]
                 }
                 """;

@@ -1,10 +1,12 @@
 package com.veterinaria.controller;
 
+import com.veterinaria.dto.request.SolicitudAdopcionRequest;
 import com.veterinaria.dto.response.MascotaAdoptableResponse;
 import com.veterinaria.dto.response.SolicitudAdopcionResponse;
 import com.veterinaria.model.MascotaAdoptable;
 import com.veterinaria.model.SolicitudAdopcion;
 import com.veterinaria.service.AdopcionService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,9 +16,12 @@ import java.util.stream.Collectors;
 public class AdopcionController {
 
     private final AdopcionService adopcionService;
+    private final com.veterinaria.service.MascotaAdoptableService mascotaAdoptableService;
 
-    public AdopcionController(AdopcionService adopcionService) {
+    public AdopcionController(AdopcionService adopcionService,
+            com.veterinaria.service.MascotaAdoptableService mascotaAdoptableService) {
         this.adopcionService = adopcionService;
+        this.mascotaAdoptableService = mascotaAdoptableService;
     }
 
     @GetMapping("/disponibles")
@@ -28,8 +33,15 @@ public class AdopcionController {
     }
 
     @PostMapping("/solicitudes")
-    public SolicitudAdopcionResponse enviarSolicitud(@RequestBody SolicitudAdopcion solicitud) {
-        return SolicitudAdopcionResponse.fromEntity(adopcionService.crearSolicitud(solicitud));
+    public SolicitudAdopcionResponse enviarSolicitud(@Valid @RequestBody SolicitudAdopcionRequest request) {
+        MascotaAdoptable mascota = mascotaAdoptableService.buscarPorId(request.getMascotaId())
+                .orElseThrow(() -> new RuntimeException("Mascota no encontrada"));
+        SolicitudAdopcion entity = new SolicitudAdopcion();
+        entity.setMascota(mascota);
+        entity.setNombreSolicitante(request.getNombreSolicitante());
+        entity.setTelefono(request.getTelefono());
+        entity.setMotivo(request.getMotivo());
+        return SolicitudAdopcionResponse.fromEntity(adopcionService.crearSolicitud(entity));
     }
 
     @PatchMapping("/solicitudes/{id}/estado")

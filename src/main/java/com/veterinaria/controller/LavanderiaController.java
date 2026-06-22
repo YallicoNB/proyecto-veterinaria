@@ -1,8 +1,12 @@
 package com.veterinaria.controller;
 
+import com.veterinaria.dto.request.ServicioLavadoRequest;
 import com.veterinaria.dto.response.ServicioLavadoResponse;
+import com.veterinaria.model.Mascota;
 import com.veterinaria.model.ServicioLavado;
 import com.veterinaria.service.LavanderiaService;
+import com.veterinaria.service.MascotaService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,15 +20,24 @@ import java.util.stream.Collectors;
 public class LavanderiaController {
 
     private final LavanderiaService lavanderiaService;
+    private final MascotaService mascotaService;
 
-    public LavanderiaController(LavanderiaService lavanderiaService) {
+    public LavanderiaController(LavanderiaService lavanderiaService, MascotaService mascotaService) {
         this.lavanderiaService = lavanderiaService;
+        this.mascotaService = mascotaService;
     }
 
     @PostMapping
-    public ResponseEntity<ServicioLavadoResponse> crearServicio(@RequestBody ServicioLavado servicio) {
+    public ResponseEntity<ServicioLavadoResponse> crearServicio(@Valid @RequestBody ServicioLavadoRequest request) {
+        ServicioLavado entity = new ServicioLavado();
+        entity.setMascota(mascotaService.buscarPorId(request.getMascotaId())
+                .orElseThrow(() -> new RuntimeException("Mascota no encontrada")));
+        entity.setTipoServicio(request.getTipoServicio());
+        entity.setPrecio(request.getPrecio());
+        entity.setFechaHora(request.getFechaHora());
+        entity.setObservaciones(request.getObservaciones());
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ServicioLavadoResponse.fromEntity(lavanderiaService.crearServicio(servicio)));
+                .body(ServicioLavadoResponse.fromEntity(lavanderiaService.crearServicio(entity)));
     }
 
     @GetMapping

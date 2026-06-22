@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 // Importa servicio de tokens jwt
 import com.veterinaria.jwt.JwtService;
 // Importa servicio de detalles usuario
-import com.veterinaria.jwt.CustomUserDetailsService;
+import com.veterinaria.service.CustomUserDetailsService;
 // Importa filtro de autenticacion jwt
 import com.veterinaria.jwt.JwtAuthenticationFilter;
 
