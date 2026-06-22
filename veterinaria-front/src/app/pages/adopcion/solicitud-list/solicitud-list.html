@@ -1,1 +1,50 @@
-<p>solicitud-list works!</p>
+<h2 class="page-title"><i class="bi bi-file-text"></i> Solicitudes de Adopción</h2>
+
+@if (mensaje) {
+  <div class="alert alert-success"><i class="bi bi-check-circle"></i> {{ mensaje }}</div>
+}
+@if (error) {
+  <div class="alert alert-error"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+}
+
+<div class="table-container">
+  @if (solicitudes.length === 0) {
+    <div class="empty-state">No hay solicitudes registradas.</div>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Mascota</th>
+          <th>Solicitante</th>
+          <th>Teléfono</th>
+          <th>Motivo</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (s of solicitudes; track s.id) {
+          <tr>
+            <td>{{ s.id }}</td>
+            <td>{{ s.nombreMascota }}</td>
+            <td>{{ s.nombreSolicitante }}</td>
+            <td>{{ s.telefono }}</td>
+            <td>{{ s.motivo }}</td>
+            <td><span class="badge badge-{{ s.estado.toLowerCase() }}">{{ s.estado }}</span></td>
+            <td>
+              @if (s.estado === 'PENDIENTE') {
+                <button class="btn btn-sm btn-primary" (click)="cambiarEstado(s.id, 'APROBADA')">
+                  <i class="bi bi-check"></i> Aprobar
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="cambiarEstado(s.id, 'RECHAZADA')">
+                  <i class="bi bi-x"></i> Rechazar
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

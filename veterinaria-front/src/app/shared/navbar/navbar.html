@@ -2,12 +2,32 @@
   <a class="navbar-brand" routerLink="/dashboard">
     <i class="bi bi-heart-pulse"></i> Veterinaria
   </a>
+
+  <input id="menu-checkbox" type="checkbox" [checked]="menuOpen" (change)="toggleMenu()" />
+  <label class="menu-toggle" for="menu-checkbox">
+    <i class="bi" [class.bi-list]="!menuOpen" [class.bi-x]="menuOpen"></i>
+  </label>
+
+  <nav class="navbar-links">
+    @if (auth.isAuthenticated()) {
+      <a routerLink="/dashboard" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:true}">
+        <i class="bi bi-speedometer2"></i> Dashboard
+      </a>
+    }
+    <a routerLink="/tienda/productos" routerLinkActive="active-link">
+      <i class="bi bi-box-seam"></i> Productos
+    </a>
+    <a routerLink="/adopcion/disponibles" routerLinkActive="active-link">
+      <i class="bi bi-heart"></i> Adopción
+    </a>
+  </nav>
+
   @if (auth.isAuthenticated()) {
     <div class="navbar-user">
       <i class="bi bi-person-circle"></i>
-      <span>{{ auth.getUsername() }}</span>
-      <span>({{ auth.getRol() }})</span>
-      <button (click)="auth.logout()">Salir</button>
+      <span class="username">{{ auth.getUsername() }}</span>
+      <span class="role-badge">{{ auth.getRol() }}</span>
+      <button (click)="auth.logout()"><i class="bi bi-box-arrow-right"></i> Salir</button>
     </div>
   }
 </header>

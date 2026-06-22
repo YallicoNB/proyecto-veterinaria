@@ -1,1 +1,31 @@
-<p>dashboard works!</p>
+<div class="welcome">
+  <h2 class="page-title"><i class="bi bi-speedometer2"></i> Dashboard</h2>
+  <p>Resumen general de la clínica veterinaria</p>
+</div>
+
+@if (loading) {
+  <div class="spinner">
+    <i class="bi bi-arrow-repeat" style="font-size: 32px; animation: spin 1s linear infinite;"></i>
+    <p>Cargando datos...</p>
+  </div>
+} @else if (error) {
+  <div class="empty-state" style="color: #f44336;">
+    <i class="bi bi-exclamation-triangle" style="font-size: 32px;"></i>
+    <p>{{ error }}</p>
+  </div>
+} @else {
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="bi bi-box-seam"></i></div>
+      <div class="stat-info"><h3>{{ totalProductos }}</h3><p>Productos en Tienda</p></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon orange"><i class="bi bi-clock"></i></div>
+      <div class="stat-info"><h3>{{ serviciosPendientes }}</h3><p>Servicios Pendientes</p></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="bi bi-heart"></i></div>
+      <div class="stat-info"><h3>{{ mascotasDisponibles }}</h3><p>Mascotas en Adopción</p></div>
+    </div>
+  </div>
+}

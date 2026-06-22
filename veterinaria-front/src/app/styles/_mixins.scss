@@ -1,6 +1,8 @@
+@use 'variables' as *;
+
 @mixin card($padding: 16px) {
   background: white;
-  border-radius: 8px;
+  border-radius: $radius;
   padding: $padding;
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
 }
@@ -13,4 +15,65 @@
 
 @mixin page-padding {
   padding: 24px;
+}
+
+@mixin table-base {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    background: $primary-light;
+    color: $text;
+    font-weight: 500;
+    border-bottom: 2px solid darken($primary-light, 10%);
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid $border;
+  }
+  tr:hover {
+    background: #fafafa;
+  }
+}
+
+@mixin form-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  label {
+    font-size: 13px;
+    color: $text-secondary;
+    margin-bottom: 4px;
+  }
+  input, textarea, select {
+    padding: 8px 12px;
+    border: 1px solid $border;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    &:focus {
+      outline: none;
+      border-color: $primary;
+    }
+    &.ng-invalid.ng-touched {
+      border-color: $warn;
+    }
+  }
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+}
+
+@mixin badge($bg, $color) {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background: $bg;
+  color: $color;
 }

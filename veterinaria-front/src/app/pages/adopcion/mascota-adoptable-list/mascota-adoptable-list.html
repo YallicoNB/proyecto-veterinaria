@@ -1,1 +1,19 @@
-<p>mascota-adoptable-list works!</p>
+<h2 class="page-title"><i class="bi bi-heart"></i> Mascotas en Adopción</h2>
+
+@if (mascotas.length === 0) {
+  <div class="empty-state">No hay mascotas disponibles para adopción en este momento.</div>
+}
+
+<div class="card-grid">
+  @for (m of mascotas; track m.id) {
+    <div class="adopcion-card">
+      <h3><i class="bi bi-paw"></i> {{ m.nombre }}</h3>
+      <div><span class="label">Especie:</span> <span class="value">{{ m.especie }}</span></div>
+      <div><span class="label">Edad:</span> <span class="value">{{ m.edad }} año(s)</span></div>
+      <p class="desc">{{ m.descripcion }}</p>
+      <a class="btn btn-primary" routerLink="/adopcion/solicitudes/nueva" [queryParams]="{mascotaId: m.id}">
+        <i class="bi bi-file-text"></i> Solicitar Adopción
+      </a>
+    </div>
+  }
+</div>

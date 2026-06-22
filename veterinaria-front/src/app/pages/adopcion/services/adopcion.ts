@@ -9,6 +9,10 @@ export class AdopcionService {
   private http = inject(HttpClient);
   private baseUrl = 'http://localhost:8080/api/adopcion';
 
+  listarSolicitudes(): Observable<SolicitudAdopcion[]> {
+    return this.http.get<SolicitudAdopcion[]>(`${this.baseUrl}/solicitudes`);
+  }
+
   listarDisponibles(): Observable<MascotaAdoptable[]> {
     return this.http.get<MascotaAdoptable[]>(`${this.baseUrl}/disponibles`);
   }

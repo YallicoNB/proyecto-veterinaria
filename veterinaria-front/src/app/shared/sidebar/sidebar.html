@@ -37,9 +37,11 @@
     <a routerLink="/adopcion/disponibles" routerLinkActive="active-link">
       <i class="bi bi-heart"></i> Mascotas
     </a>
-    <a routerLink="/adopcion/solicitudes" routerLinkActive="active-link">
-      <i class="bi bi-file-text"></i> Solicitudes
-    </a>
+    @if (tieneRol(['ADMIN'])) {
+      <a routerLink="/adopcion/solicitudes" routerLinkActive="active-link">
+        <i class="bi bi-file-text"></i> Solicitudes
+      </a>
+    }
   }
 
   @if (tieneRol(['ADMIN'])) {
