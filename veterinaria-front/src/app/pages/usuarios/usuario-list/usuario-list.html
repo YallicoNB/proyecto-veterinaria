@@ -1,1 +1,44 @@
-<p>usuario-list works!</p>
+<h2 class="page-title"><i class="bi bi-people"></i> Usuarios</h2>
+
+@if (mensaje) {
+  <div class="alert alert-success"><i class="bi bi-check-circle"></i> {{ mensaje }}</div>
+}
+@if (error) {
+  <div class="alert alert-error"><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+}
+
+@if (loading) {
+  <div class="spinner"><i class="bi bi-arrow-repeat" style="font-size: 32px; animation: spin 1s linear infinite;"></i><p>Cargando usuarios...</p></div>
+} @else if (usuarios.length === 0) {
+  <div class="empty-state"><i class="bi bi-people" style="font-size: 32px;"></i><p>No hay usuarios registrados</p></div>
+} @else {
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (u of usuarios; track u.id) {
+          <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.username }}</td>
+            <td>{{ u.email }}</td>
+            <td><span class="badge badge-{{ u.rol.toLowerCase() }}">{{ u.rol }}</span></td>
+            <td><span class="badge" [class.badge-active]="u.activo" [class.badge-inactive]="!u.activo">{{ u.activo ? 'Activo' : 'Inactivo' }}</span></td>
+            <td>
+              <a class="btn btn-sm btn-outline" routerLink="/usuarios/{{ u.id }}/editar"><i class="bi bi-pencil"></i> Editar</a>
+              <button class="btn btn-sm btn-warn" (click)="eliminar(u.id, u.username)"><i class="bi bi-trash"></i> Eliminar</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

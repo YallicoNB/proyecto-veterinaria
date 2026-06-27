@@ -6,7 +6,8 @@ export const routes: Routes = [
   { path: 'login', loadComponent: () => import('./pages/login/login').then(m => m.Login) },
   { path: 'register', loadComponent: () => import('./pages/register/register').then(m => m.Register) },
   { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard').then(m => m.Dashboard), canActivate: [authGuard] },
-  { path: 'usuarios', loadComponent: () => import('./pages/usuarios/usuario-list/usuario-list').then(m => m.UsuarioList), canActivate: [authGuard] },
+  { path: 'usuarios', loadComponent: () => import('./pages/usuarios/usuario-list/usuario-list').then(m => m.UsuarioList), canActivate: [authGuard, roleGuard(['ADMIN'])] },
+  { path: 'usuarios/:id/editar', loadComponent: () => import('./pages/usuarios/usuario-form/usuario-form').then(m => m.UsuarioForm), canActivate: [authGuard, roleGuard(['ADMIN'])] },
 
   // Tienda
   { path: 'tienda/productos', loadComponent: () => import('./pages/tienda/productos/producto-list/producto-list').then(m => m.ProductoList) },

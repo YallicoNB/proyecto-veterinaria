@@ -1,1 +1,68 @@
-<p>register works!</p>
+<div class="register-container">
+  <div class="register-card">
+    <h2>Crear Cuenta</h2>
+    <p class="subtitle">Registrate para acceder al sistema</p>
+
+    @if (success) {
+      <div class="alert alert-success">
+        <i class="bi bi-check-circle"></i> Registro exitoso. Redirigiendo al login...
+      </div>
+    }
+
+    @if (error) {
+      <div class="alert alert-error">
+        <i class="bi bi-exclamation-circle"></i> {{ error }}
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label for="username">Usuario</label>
+        <input id="username" formControlName="username" placeholder="Nombre de usuario" autocomplete="username" />
+        @if (form.get('username')?.invalid && form.get('username')?.touched) {
+          <div class="form-error">El usuario es obligatorio</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">Correo electronico</label>
+        <input id="email" type="email" formControlName="email" placeholder="correo@ejemplo.com" autocomplete="email" />
+        @if (form.get('email')?.invalid && form.get('email')?.touched) {
+          @if (form.get('email')?.errors?.['required']) { <div class="form-error">El correo es obligatorio</div> }
+          @if (form.get('email')?.errors?.['email']) { <div class="form-error">Ingresa un correo valido</div> }
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contrasena</label>
+        <input id="password" type="password" formControlName="password" placeholder="Minimo 6 caracteres" autocomplete="new-password" />
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+          @if (form.get('password')?.errors?.['required']) { <div class="form-error">La contrasena es obligatoria</div> }
+          @if (form.get('password')?.errors?.['minlength']) { <div class="form-error">Minimo 6 caracteres</div> }
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="rol">Rol</label>
+        <select id="rol" formControlName="rol">
+          <option value="" disabled>Selecciona un rol</option>
+          @for (r of roles; track r) {
+            <option [value]="r">{{ r }}</option>
+          }
+        </select>
+        @if (form.get('rol')?.invalid && form.get('rol')?.touched) {
+          <div class="form-error">Selecciona un rol</div>
+        }
+      </div>
+
+      <button class="btn btn-primary" type="submit" [disabled]="form.invalid || loading || success">
+        @if (loading) { <span class="spinner"></span> }
+        Registrarse
+      </button>
+    </form>
+
+    <div class="login-link">
+      ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesion</a>
+    </div>
+  </div>
+</div>
