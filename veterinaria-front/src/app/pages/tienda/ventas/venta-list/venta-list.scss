@@ -1,0 +1,32 @@
+.tienda-container {
+  padding: 20px;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.details-row {
+  background-color: #f8f9fa;
+  
+  .details-container {
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin: 10px 0;
+
+    h4 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: #495057;
+    }
+
+    .table-sm {
+      margin-bottom: 0;
+      background: white;
+    }
+  }
+}

@@ -1,0 +1,27 @@
+.tienda-container {
+  padding: 20px;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.filters-container {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  align-items: center;
+
+  .search-box {
+    flex: 1;
+    max-width: 400px;
+  }
+}
+
+.text-danger {
+  color: red;
+  font-weight: bold;
+}
