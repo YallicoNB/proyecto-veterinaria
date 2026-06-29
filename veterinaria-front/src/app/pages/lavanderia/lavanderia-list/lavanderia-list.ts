@@ -1,12 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { DatePipe, CurrencyPipe } from '@angular/common';
 import { LavanderiaService } from '../../../core/services/lavanderia';
 import { ServicioLavado } from '../../../models/servicio-lavado.model';
 
 @Component({
   selector: 'app-lavanderia-list',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, CurrencyPipe],
   templateUrl: './lavanderia-list.html',
   styleUrl: './lavanderia-list.scss'
 })
