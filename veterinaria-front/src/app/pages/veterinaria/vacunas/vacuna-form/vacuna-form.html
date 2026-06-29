@@ -1,1 +1,78 @@
-<p>vacuna-form works!</p>
+<div class="page-container">
+  <div class="page-header">
+    <h2>Registrar Vacuna</h2>
+    <a routerLink="/veterinaria/vacunas" class="btn-back">← Volver</a>
+  </div>
+
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+
+  <div class="form-card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label for="mascotaId">Mascota *</label>
+        <select id="mascotaId" formControlName="mascotaId">
+          <option [value]="null">Seleccionar mascota</option>
+          @for (mascota of mascotas; track mascota.id) {
+            <option [value]="mascota.id">{{ mascota.nombre }} ({{ mascota.tipo }})</option>
+          }
+        </select>
+        @if (mascotaId?.invalid && mascotaId?.touched) {
+          <span class="field-error">Seleccioná una mascota</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="nombreVacuna">Nombre de la vacuna *</label>
+        <input
+          id="nombreVacuna"
+          type="text"
+          formControlName="nombreVacuna"
+          placeholder="Ej: Antirrábica, Parvovirus..."/>
+        @if (nombreVacuna?.invalid && nombreVacuna?.touched) {
+          <span class="field-error">El nombre es requerido (mínimo 3 caracteres)</span>
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fechaAplicacion">Fecha de aplicación *</label>
+          <input
+            id="fechaAplicacion"
+            type="date"
+            formControlName="fechaAplicacion"/>
+          @if (fechaAplicacion?.invalid && fechaAplicacion?.touched) {
+            <span class="field-error">La fecha de aplicación es requerida</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="fechaProxima">Próxima dosis</label>
+          <input
+            id="fechaProxima"
+            type="date"
+            formControlName="fechaProxima"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="lote">Número de lote</label>
+        <input
+          id="lote"
+          type="text"
+          formControlName="lote"
+          placeholder="Ej: LOT-2024-001"/>
+      </div>
+
+      <div class="form-actions">
+        <a routerLink="/veterinaria/vacunas" class="btn-cancel">Cancelar</a>
+        <button type="submit" class="btn-primary" [disabled]="form.invalid || loading">
+          {{ loading ? 'Registrando...' : 'Registrar vacuna' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

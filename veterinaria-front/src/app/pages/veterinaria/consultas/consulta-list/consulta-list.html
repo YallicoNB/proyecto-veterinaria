@@ -1,1 +1,70 @@
-<p>consulta-list works!</p>
+<div class="page-container">
+  <div class="page-header">
+    <h2>Consultas</h2>
+    <a routerLink="/veterinaria/consultas/nueva" class="btn-primary">+ Nueva consulta</a>
+  </div>
+
+  <div class="filtros">
+    <label>Filtrar por estado:</label>
+    <select (change)="cambiarFiltro($any($event.target).value)">
+      <option value="">Todos</option>
+      @for (estado of estados; track estado) {
+        <option [value]="estado">{{ estado }}</option>
+      }
+    </select>
+  </div>
+
+  @if (loading) {
+    <p class="loading">Cargando consultas...</p>
+  }
+
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+
+  @if (!loading && consultas.length === 0) {
+    <p class="empty">No hay consultas registradas.</p>
+  }
+
+  @if (!loading && consultas.length > 0) {
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Mascota</th>
+          <th>Veterinario</th>
+          <th>Síntomas</th>
+          <th>Fecha</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (consulta of consultas; track consulta.id) {
+          <tr>
+            <td>{{ consulta.id }}</td>
+            <td>{{ consulta.nombreMascota }}</td>
+            <td>{{ consulta.nombreVeterinario }}</td>
+            <td>{{ consulta.sintomas }}</td>
+            <td>{{ consulta.fecha | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <span class="badge" [class]="getBadgeClass(consulta.estado)">
+                {{ consulta.estado }}
+              </span>
+            </td>
+            <td class="acciones">
+              @if (consulta.estado === 'PENDIENTE') {
+                <a [routerLink]="['/veterinaria/consultas', consulta.id, 'atender']" class="btn-sm btn-success">
+                  Atender
+                </a>
+                <button (click)="cancelar(consulta.id)" class="btn-sm btn-danger">
+                  Cancelar
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

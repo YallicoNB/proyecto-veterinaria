@@ -1,1 +1,67 @@
-<p>atender-consulta works!</p>
+<div class="page-container">
+  <div class="page-header">
+    <h2>Atender Consulta</h2>
+    <a routerLink="/veterinaria/consultas" class="btn-back">← Volver</a>
+  </div>
+
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+
+  @if (consulta) {
+    <div class="consulta-info">
+      <div class="info-item">
+        <span class="info-label">Mascota</span>
+        <span class="info-value">{{ consulta.nombreMascota }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Veterinario</span>
+        <span class="info-value">{{ consulta.nombreVeterinario }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Síntomas</span>
+        <span class="info-value">{{ consulta.sintomas }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Fecha</span>
+        <span class="info-value">{{ consulta.fecha }}</span>
+      </div>
+    </div>
+  }
+
+  <div class="form-card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label for="diagnostico">Diagnóstico *</label>
+        <textarea
+          id="diagnostico"
+          formControlName="diagnostico"
+          rows="4"
+          placeholder="Ingresá el diagnóstico de la consulta...">
+        </textarea>
+        @if (diagnostico?.invalid && diagnostico?.touched) {
+          <span class="field-error">El diagnóstico es requerido (mínimo 5 caracteres)</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="receta">Receta</label>
+        <textarea
+          id="receta"
+          formControlName="receta"
+          rows="3"
+          placeholder="Indicaciones y medicamentos recetados (opcional)...">
+        </textarea>
+      </div>
+
+      <div class="form-actions">
+        <a routerLink="/veterinaria/consultas" class="btn-cancel">Cancelar</a>
+        <button type="submit" class="btn-primary" [disabled]="form.invalid || loading">
+          {{ loading ? 'Guardando...' : 'Confirmar atención' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

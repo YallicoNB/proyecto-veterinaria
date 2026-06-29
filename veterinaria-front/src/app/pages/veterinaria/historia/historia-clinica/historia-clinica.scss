@@ -1,0 +1,193 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m;
+
+.page-container {
+  padding: 24px;
+}
+
+.page-header {
+  @include m.flex-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 0 0 4px;
+    font-size: 22px;
+    font-weight: 500;
+  }
+}
+
+.mascota-info {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(0,0,0,0.5);
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.form-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  margin-bottom: 24px;
+  max-width: 600px;
+
+  h3 {
+    margin: 0 0 20px;
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(0,0,0,0.7);
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(0,0,0,0.7);
+  }
+
+  textarea {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: v.$color-primary;
+    }
+
+    &.ng-invalid.ng-touched {
+      border-color: #c62828;
+    }
+  }
+}
+
+.field-error {
+  font-size: 12px;
+  color: #c62828;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.historias-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 700px;
+}
+
+.historia-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.historia-header {
+  @include m.flex-between;
+  padding: 12px 20px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.historia-fecha {
+  font-size: 13px;
+  color: rgba(0,0,0,0.5);
+  font-weight: 500;
+}
+
+.historia-body {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.historia-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.4);
+  letter-spacing: 0.5px;
+}
+
+.item-value {
+  font-size: 14px;
+  color: rgba(0,0,0,0.8);
+  line-height: 1.5;
+}
+
+.btn-primary {
+  @include m.btn-primary;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-cancel, .btn-back {
+  padding: 8px 20px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background: white;
+  color: rgba(0,0,0,0.7);
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:hover {
+    background: #f5f5f5;
+  }
+}
+
+.btn-sm {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+
+  &.btn-danger {
+    background: #c62828;
+    color: white;
+  }
+}
+
+.loading, .empty {
+  text-align: center;
+  color: rgba(0,0,0,0.5);
+  padding: 40px 0;
+}
+
+.error {
+  color: #c62828;
+  padding: 12px;
+  background: #ffebee;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}

@@ -1,0 +1,118 @@
+@use '../../../styles/variables' as v;
+@use '../../../styles/mixins' as m;
+
+.page-container {
+  padding: 24px;
+}
+
+.page-header {
+  @include m.flex-between;
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 500;
+  }
+}
+
+.filtros {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.btn-filtro {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background: white;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: v.$color-primary;
+    color: v.$color-primary;
+  }
+
+  &.activo {
+    background: v.$color-primary;
+    color: white;
+    border-color: v.$color-primary;
+  }
+}
+
+.total {
+  font-size: 13px;
+  color: rgba(0,0,0,0.4);
+}
+
+.tabla {
+  @include m.tabla-base;
+}
+
+.badge {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+
+  &.badge-pendiente {
+    background: #fff3e0;
+    color: #e65100;
+  }
+
+  &.badge-proceso {
+    background: #e3f2fd;
+    color: #1565c0;
+  }
+
+  &.badge-completado {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  &.badge-cancelado {
+    background: #ffebee;
+    color: #c62828;
+  }
+}
+
+.acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-primary {
+  @include m.btn-primary;
+}
+
+.btn-sm {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+
+  &.btn-success {
+    background: #2e7d32;
+    color: white;
+  }
+}
+
+.loading, .empty {
+  text-align: center;
+  color: rgba(0,0,0,0.5);
+  padding: 40px 0;
+}
+
+.error {
+  color: #c62828;
+  padding: 12px;
+  background: #ffebee;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}

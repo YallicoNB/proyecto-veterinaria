@@ -1,1 +1,76 @@
-<p>lavanderia-list works!</p>
+<div class="page-container">
+  <div class="page-header">
+    <h2>Lavandería</h2>
+    <a routerLink="/lavanderia/servicios/nuevo" class="btn-primary">+ Nuevo servicio</a>
+  </div>
+
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+
+  <div class="filtros">
+    <button
+      (click)="togglePendientes()"
+      class="btn-filtro"
+      [class.activo]="soloPendientes">
+      {{ soloPendientes ? '✕ Mostrando pendientes' : 'Ver solo pendientes' }}
+    </button>
+    <span class="total">
+      {{ serviciosFiltrados.length }} servicio{{ serviciosFiltrados.length !== 1 ? 's' : '' }}
+    </span>
+  </div>
+
+  @if (loading) {
+    <p class="loading">Cargando servicios...</p>
+  }
+
+  @if (!loading && serviciosFiltrados.length === 0) {
+    <p class="empty">
+      {{ soloPendientes ? 'No hay servicios pendientes.' : 'No hay servicios registrados.' }}
+    </p>
+  }
+
+  @if (!loading && serviciosFiltrados.length > 0) {
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Mascota</th>
+          <th>Servicio</th>
+          <th>Precio</th>
+          <th>Fecha</th>
+          <th>Observaciones</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (servicio of serviciosFiltrados; track servicio.id) {
+          <tr>
+            <td>{{ servicio.id }}</td>
+            <td>{{ servicio.nombreMascota }}</td>
+            <td>{{ servicio.tipoServicio }}</td>
+            <td>{{ servicio.precio | currency:'PEN':'S/ ' }}</td>
+            <td>{{ servicio.fechaHora | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ servicio.observaciones || '—' }}</td>
+            <td>
+              <span class="badge" [class]="getBadgeClass(servicio.estado)">
+                {{ servicio.estado }}
+              </span>
+            </td>
+            <td class="acciones">
+              @if (getSiguienteEstado(servicio.estado)) {
+                <button
+                  (click)="cambiarEstado(servicio.id, getSiguienteEstado(servicio.estado))"
+                  class="btn-sm btn-success">
+                  {{ getSiguienteEstadoLabel(servicio.estado) }}
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+</div>

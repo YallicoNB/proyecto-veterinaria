@@ -1,1 +1,113 @@
-<p>historia-clinica works!</p>
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h2>Historia Clínica</h2>
+      @if (mascota) {
+        <p class="mascota-info">
+          {{ mascota.nombre }} · {{ mascota.tipo }} · {{ mascota.raza }}
+        </p>
+      }
+    </div>
+    <div class="header-actions">
+      <a routerLink="/veterinaria/consultas" class="btn-back">← Volver</a>
+      <button (click)="toggleFormulario()" class="btn-primary">
+        {{ mostrarFormulario ? '✕ Cancelar' : '+ Nuevo registro' }}
+      </button>
+    </div>
+  </div>
+
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+
+  <!-- Formulario inline -->
+  @if (mostrarFormulario) {
+    <div class="form-card">
+      <h3>Nuevo registro clínico</h3>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <div class="form-group">
+          <label for="motivoConsulta">Motivo de consulta *</label>
+          <textarea
+            id="motivoConsulta"
+            formControlName="motivoConsulta"
+            rows="3"
+            placeholder="Describí el motivo de la consulta...">
+          </textarea>
+          @if (motivoConsulta?.invalid && motivoConsulta?.touched) {
+            <span class="field-error">El motivo es requerido (mínimo 5 caracteres)</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="diagnostico">Diagnóstico</label>
+          <textarea
+            id="diagnostico"
+            formControlName="diagnostico"
+            rows="3"
+            placeholder="Diagnóstico (opcional)...">
+          </textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="tratamiento">Tratamiento</label>
+          <textarea
+            id="tratamiento"
+            formControlName="tratamiento"
+            rows="3"
+            placeholder="Tratamiento indicado (opcional)...">
+          </textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" (click)="toggleFormulario()" class="btn-cancel">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary" [disabled]="form.invalid || loading">
+            {{ loading ? 'Guardando...' : 'Guardar registro' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  }
+
+  @if (loading && !mostrarFormulario) {
+    <p class="loading">Cargando historial...</p>
+  }
+
+  @if (!loading && historias.length === 0) {
+    <p class="empty">No hay registros clínicos para esta mascota.</p>
+  }
+
+  <!-- Listado de historias -->
+  <div class="historias-list">
+    @for (historia of historias; track historia.id) {
+      <div class="historia-card">
+        <div class="historia-header">
+          <span class="historia-fecha">{{ historia.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</span>
+          <button (click)="eliminar(historia.id)" class="btn-sm btn-danger">Eliminar</button>
+        </div>
+        <div class="historia-body">
+          <div class="historia-item">
+            <span class="item-label">Motivo</span>
+            <span class="item-value">{{ historia.motivoConsulta }}</span>
+          </div>
+          @if (historia.diagnostico) {
+            <div class="historia-item">
+              <span class="item-label">Diagnóstico</span>
+              <span class="item-value">{{ historia.diagnostico }}</span>
+            </div>
+          }
+          @if (historia.tratamiento) {
+            <div class="historia-item">
+              <span class="item-label">Tratamiento</span>
+              <span class="item-value">{{ historia.tratamiento }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+</div>

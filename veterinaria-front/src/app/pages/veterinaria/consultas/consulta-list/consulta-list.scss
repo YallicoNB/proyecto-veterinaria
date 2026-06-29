@@ -1,0 +1,110 @@
+@use '../../../../styles/variables' as v;
+@use '../../../../styles/mixins' as m;
+
+.page-container {
+  padding: 24px;
+}
+
+.page-header {
+  @include m.flex-between;
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 500;
+  }
+}
+
+.filtros {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+
+  label {
+    font-size: 14px;
+    color: rgba(0,0,0,0.6);
+  }
+
+  select {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+      border-color: v.$color-primary;
+    }
+  }
+}
+
+.tabla {
+  @include m.tabla-base;
+}
+
+.badge {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+
+  &.badge-pendiente {
+    background: #fff3e0;
+    color: #e65100;
+  }
+
+  &.badge-realizada {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  &.badge-cancelada {
+    background: #ffebee;
+    color: #c62828;
+  }
+}
+
+.acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-primary {
+  @include m.btn-primary;
+}
+
+.btn-sm {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+
+  &.btn-success {
+    background: #2e7d32;
+    color: white;
+  }
+
+  &.btn-danger {
+    background: #c62828;
+    color: white;
+  }
+}
+
+.loading, .empty {
+  text-align: center;
+  color: rgba(0,0,0,0.5);
+  padding: 40px 0;
+}
+
+.error {
+  color: #c62828;
+  padding: 12px;
+  background: #ffebee;
+  border-radius: 4px;
+}

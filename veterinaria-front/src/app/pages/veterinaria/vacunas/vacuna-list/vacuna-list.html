@@ -1,1 +1,81 @@
-<p>vacuna-list works!</p>
+<div class="page-container">
+  <div class="page-header">
+    <h2>Vacunas</h2>
+    <a routerLink="/veterinaria/vacunas/nueva" class="btn-primary">+ Registrar vacuna</a>
+  </div>
+
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+
+  <!-- Próximas vacunas -->
+  @if (proximas.length > 0) {
+    <div class="proximas-section">
+      <h3>⚠️ Próximas vacunas (próximos 30 días)</h3>
+      <div class="proximas-grid">
+        @for (vacuna of proximas; track vacuna.id) {
+          <div class="proxima-card">
+            <span class="proxima-mascota">{{ vacuna.nombreMascota }}</span>
+            <span class="proxima-nombre">{{ vacuna.nombreVacuna }}</span>
+            <span class="proxima-fecha">{{ vacuna.fechaProxima | date:'dd/MM/yyyy' }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Filtro por mascota -->
+  <div class="filtros">
+    <label>Buscar vacunas por mascota:</label>
+    <select (change)="buscarPorMascota(+$any($event.target).value)">
+      <option value="0">Seleccionar mascota</option>
+      @for (mascota of mascotas; track mascota.id) {
+        <option [value]="mascota.id">{{ mascota.nombre }}</option>
+      }
+    </select>
+  </div>
+
+  @if (loading) {
+    <p class="loading">Cargando vacunas...</p>
+  }
+
+  @if (!loading && mascotaSeleccionada && vacunas.length === 0) {
+    <p class="empty">Esta mascota no tiene vacunas registradas.</p>
+  }
+
+  @if (!loading && vacunas.length > 0) {
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Vacuna</th>
+          <th>Mascota</th>
+          <th>Fecha aplicación</th>
+          <th>Próxima dosis</th>
+          <th>Lote</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (vacuna of vacunas; track vacuna.id) {
+          <tr [class.fila-alerta]="esProxima(vacuna.fechaProxima)">
+            <td>{{ vacuna.nombreVacuna }}</td>
+            <td>{{ vacuna.nombreMascota }}</td>
+            <td>{{ vacuna.fechaAplicacion | date:'dd/MM/yyyy' }}</td>
+            <td>
+              {{ vacuna.fechaProxima | date:'dd/MM/yyyy' }}
+              @if (esProxima(vacuna.fechaProxima)) {
+                <span class="badge-alerta">Próxima</span>
+              }
+            </td>
+            <td>{{ vacuna.lote }}</td>
+            <td>
+              <button (click)="eliminar(vacuna.id)" class="btn-sm btn-danger">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
