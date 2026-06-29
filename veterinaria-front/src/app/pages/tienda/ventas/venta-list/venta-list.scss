@@ -1,0 +1,35 @@
+@use '../../../../styles/mixins' as *;
+@use '../../../../styles/variables' as *;
+
+.tienda-container {
+  @include page-padding;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.details-row {
+  background-color: $bg;
+
+  .details-container {
+    padding: 15px;
+    border: 1px solid $border;
+    border-radius: $radius;
+    margin: 10px 0;
+
+    h4 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: $text-secondary;
+    }
+
+    .table-sm {
+      margin-bottom: 0;
+      background: white;
+    }
+  }
+}

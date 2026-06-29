@@ -1,1 +1,64 @@
-<p>producto-list works!</p>
+<div class="tienda-container">
+  <div class="header-actions">
+    <h2>Catálogo de Productos</h2>
+    <a routerLink="/tienda/productos/nuevo" class="btn btn-primary">Nuevo Producto</a>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  @if (loading) {
+    <div class="alert alert-info">Cargando productos...</div>
+  }
+
+  <div class="filters-container">
+    <div class="search-box">
+      <input type="text" [(ngModel)]="searchText" placeholder="Buscar por nombre..." class="form-control">
+    </div>
+    <div class="filter-box">
+      <label>
+        <input type="checkbox" [(ngModel)]="mostrarBajoStock" (change)="filtrarBajoStock()">
+        Mostrar solo bajo stock (<= 10)
+      </label>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Categoría</th>
+          <th>Precio</th>
+          <th>Stock</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (producto of productos | filterProductos:searchText; track producto.id) {
+          <tr>
+            <td>{{ producto.id }}</td>
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.categoria }}</td>
+            <td>{{ producto.precio | currency:'USD' }}</td>
+            <td>
+              <span [class.text-danger]="producto.stock <= 10">
+                {{ producto.stock }}
+              </span>
+            </td>
+            <td>
+              <a [routerLink]="['/tienda/productos', producto.id, 'editar']" class="btn btn-sm btn-outline-primary">Editar</a>
+              <button (click)="eliminarProducto(producto.id)" class="btn btn-sm btn-outline-danger">Eliminar</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="text-center">No hay productos disponibles.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+@use '../../../../styles/mixins' as *;
+@use '../../../../styles/variables' as *;
+
+.tienda-container {
+  @include page-padding;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.filters-container {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  align-items: center;
+
+  .search-box {
+    flex: 1;
+    max-width: 400px;
+  }
+}
+
+.text-danger {
+  color: $warn;
+  font-weight: bold;
+}
