@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { combineLatest, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ProductoService } from '../tienda/productos/services/producto';
-import { LavanderiaService } from '../lavanderia/services/lavanderia';
+import { LavanderiaService } from '../../core/services/lavanderia';
 import { AdopcionService } from '../adopcion/services/adopcion';
 
 @Component({
