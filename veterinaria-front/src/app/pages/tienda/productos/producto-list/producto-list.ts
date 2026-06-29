@@ -19,25 +19,41 @@ export class ProductoList implements OnInit {
   productos: Producto[] = [];
   searchText: string = '';
   mostrarBajoStock: boolean = false;
+  errorMessage: string = '';
+  loading: boolean = false;
 
   ngOnInit(): void {
     this.cargarProductos();
   }
 
   cargarProductos() {
+    this.loading = true;
+    this.errorMessage = '';
     this.productoService.listar().subscribe({
       next: (data) => {
         this.productos = data;
+        this.loading = false;
       },
-      error: (err) => console.error('Error al cargar productos', err)
+      error: () => {
+        this.errorMessage = 'Error al cargar productos.';
+        this.loading = false;
+      }
     });
   }
 
   filtrarBajoStock() {
+    this.errorMessage = '';
     if (this.mostrarBajoStock) {
+      this.loading = true;
       this.productoService.bajoStock(10).subscribe({
-        next: (data) => this.productos = data,
-        error: (err) => console.error('Error al cargar bajo stock', err)
+        next: (data) => {
+          this.productos = data;
+          this.loading = false;
+        },
+        error: () => {
+          this.errorMessage = 'Error al filtrar por bajo stock.';
+          this.loading = false;
+        }
       });
     } else {
       this.cargarProductos();
@@ -46,11 +62,14 @@ export class ProductoList implements OnInit {
 
   eliminarProducto(id: number) {
     if (confirm('¿Está seguro de eliminar este producto?')) {
+      this.errorMessage = '';
       this.productoService.eliminar(id).subscribe({
         next: () => {
           this.cargarProductos();
         },
-        error: (err) => console.error('Error al eliminar', err)
+        error: () => {
+          this.errorMessage = 'Error al eliminar el producto.';
+        }
       });
     }
   }

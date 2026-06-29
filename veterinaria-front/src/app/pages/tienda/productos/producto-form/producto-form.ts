@@ -17,20 +17,20 @@ export class ProductoForm implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  productoForm: FormGroup;
+  productoForm!: FormGroup;
   productoId: number | null = null;
   isEditMode: boolean = false;
+  errorMessage: string = '';
+  loading: boolean = false;
 
-  constructor() {
+  ngOnInit(): void {
     this.productoForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.maxLength(100)]],
       precio: [0, [Validators.required, Validators.min(0.1)]],
       stock: [0, [Validators.required, Validators.min(0)]],
       categoria: ['']
     });
-  }
 
-  ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       this.productoId = Number(idParam);
@@ -40,6 +40,7 @@ export class ProductoForm implements OnInit {
   }
 
   cargarProducto(id: number) {
+    this.loading = true;
     this.productoService.buscarPorId(id).subscribe({
       next: (producto) => {
         this.productoForm.patchValue({
@@ -48,8 +49,12 @@ export class ProductoForm implements OnInit {
           stock: producto.stock,
           categoria: producto.categoria
         });
+        this.loading = false;
       },
-      error: (err) => console.error('Error al cargar producto', err)
+      error: () => {
+        this.errorMessage = 'Error al cargar producto.';
+        this.loading = false;
+      }
     });
   }
 
@@ -59,17 +64,25 @@ export class ProductoForm implements OnInit {
       return;
     }
 
+    this.errorMessage = '';
+    this.loading = true;
     const data = this.productoForm.value;
 
     if (this.isEditMode && this.productoId) {
       this.productoService.actualizar(this.productoId, data).subscribe({
         next: () => this.router.navigate(['/tienda/productos']),
-        error: (err) => console.error('Error al actualizar', err)
+        error: () => {
+          this.errorMessage = 'Error al actualizar producto.';
+          this.loading = false;
+        }
       });
     } else {
       this.productoService.crear(data).subscribe({
         next: () => this.router.navigate(['/tienda/productos']),
-        error: (err) => console.error('Error al crear', err)
+        error: () => {
+          this.errorMessage = 'Error al crear producto.';
+          this.loading = false;
+        }
       });
     }
   }

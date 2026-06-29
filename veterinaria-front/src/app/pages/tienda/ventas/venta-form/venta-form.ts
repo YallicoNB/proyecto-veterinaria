@@ -1,10 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { VentaService } from '../services/venta';
 import { ProductoService } from '../../productos/services/producto';
 import { Producto } from '../../../../models/producto.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-venta-form',
@@ -13,27 +14,35 @@ import { Producto } from '../../../../models/producto.model';
   templateUrl: './venta-form.html',
   styleUrl: './venta-form.scss',
 })
-export class VentaForm implements OnInit {
+export class VentaForm implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private ventaService = inject(VentaService);
   private productoService = inject(ProductoService);
   private router = inject(Router);
 
-  ventaForm: FormGroup;
+  ventaForm!: FormGroup;
   productos: Producto[] = [];
-
-  constructor() {
-    this.ventaForm = this.fb.group({
-      detalles: this.fb.array([], Validators.required)
-    });
-  }
+  private subRefs: Subscription[] = [];
+  errorMessage: string = '';
+  loading: boolean = false;
 
   ngOnInit(): void {
+    this.loading = true;
     this.productoService.listar().subscribe({
-      next: (data) => this.productos = data,
-      error: (err) => console.error('Error cargando productos', err)
+      next: (data) => {
+        this.productos = data;
+        this.loading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Error al cargar productos.';
+        this.loading = false;
+      }
     });
     this.agregarDetalle();
+  }
+
+  ngOnDestroy(): void {
+    this.subRefs.forEach(s => s.unsubscribe());
   }
 
   get detalles(): FormArray {
@@ -48,24 +57,28 @@ export class VentaForm implements OnInit {
       subtotal: [{ value: 0, disabled: true }]
     });
 
-    // Listen to changes in productoId to update precioUnitario
-    detalleForm.get('productoId')?.valueChanges.subscribe(id => {
-      const p = this.productos.find(prod => prod.id == id);
-      if (p) {
-        detalleForm.patchValue({ precioUnitario: p.precio });
+    const sub = new Subscription();
+    sub.add(
+      detalleForm.get('productoId')!.valueChanges.subscribe(id => {
+        const p = this.productos.find(prod => prod.id == id);
+        if (p) {
+          detalleForm.patchValue({ precioUnitario: p.precio });
+          this.calcularSubtotal(detalleForm);
+        }
+      })
+    );
+    sub.add(
+      detalleForm.get('cantidad')!.valueChanges.subscribe(() => {
         this.calcularSubtotal(detalleForm);
-      }
-    });
-
-    // Listen to changes in cantidad to update subtotal
-    detalleForm.get('cantidad')?.valueChanges.subscribe(() => {
-      this.calcularSubtotal(detalleForm);
-    });
-
+      })
+    );
+    this.subRefs.push(sub);
     this.detalles.push(detalleForm);
   }
 
   eliminarDetalle(index: number) {
+    this.subRefs[index]?.unsubscribe();
+    this.subRefs.splice(index, 1);
     this.detalles.removeAt(index);
   }
 
@@ -87,7 +100,8 @@ export class VentaForm implements OnInit {
       return;
     }
 
-    // Prepare data for the request
+    this.errorMessage = '';
+    this.loading = true;
     const requestData = {
       detalles: this.detalles.value.map((d: any) => ({
         productoId: d.productoId,
@@ -97,7 +111,10 @@ export class VentaForm implements OnInit {
 
     this.ventaService.registrar(requestData).subscribe({
       next: () => this.router.navigate(['/tienda/ventas']),
-      error: (err) => console.error('Error registrando venta', err)
+      error: () => {
+        this.errorMessage = 'Error al registrar la venta.';
+        this.loading = false;
+      }
     });
   }
 }

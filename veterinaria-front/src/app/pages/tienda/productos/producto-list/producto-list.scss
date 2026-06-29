@@ -1,5 +1,8 @@
+@use '../../../../styles/mixins' as *;
+@use '../../../../styles/variables' as *;
+
 .tienda-container {
-  padding: 20px;
+  @include page-padding;
 }
 
 .header-actions {
@@ -22,6 +25,6 @@
 }
 
 .text-danger {
-  color: red;
+  color: $warn;
   font-weight: bold;
 }

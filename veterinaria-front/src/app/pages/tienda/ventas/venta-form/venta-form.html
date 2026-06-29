@@ -1,6 +1,14 @@
 <div class="tienda-form-container">
   <h2>Registrar Nueva Venta</h2>
 
+  @if (loading) {
+    <div class="alert alert-info">Cargando productos...</div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
   <form [formGroup]="ventaForm" (ngSubmit)="guardar()" class="custom-form">
     
     <div formArrayName="detalles" class="detalles-container">

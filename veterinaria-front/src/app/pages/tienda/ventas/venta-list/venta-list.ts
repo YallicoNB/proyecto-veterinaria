@@ -16,15 +16,25 @@ export class VentaList implements OnInit {
   
   ventas: Venta[] = [];
   expandedRows: Set<number> = new Set<number>();
+  errorMessage: string = '';
+  loading: boolean = false;
 
   ngOnInit(): void {
     this.cargarVentas();
   }
 
   cargarVentas() {
+    this.loading = true;
+    this.errorMessage = '';
     this.ventaService.listar().subscribe({
-      next: (data) => this.ventas = data,
-      error: (err) => console.error('Error al cargar ventas', err)
+      next: (data) => {
+        this.ventas = data;
+        this.loading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Error al cargar ventas.';
+        this.loading = false;
+      }
     });
   }
 

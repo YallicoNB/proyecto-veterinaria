@@ -1,5 +1,8 @@
+@use '../../../../styles/mixins' as *;
+@use '../../../../styles/variables' as *;
+
 .tienda-container {
-  padding: 20px;
+  @include page-padding;
 }
 
 .header-actions {
@@ -10,18 +13,18 @@
 }
 
 .details-row {
-  background-color: #f8f9fa;
-  
+  background-color: $bg;
+
   .details-container {
     padding: 15px;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
+    border: 1px solid $border;
+    border-radius: $radius;
     margin: 10px 0;
 
     h4 {
       margin-top: 0;
       font-size: 1.1rem;
-      color: #495057;
+      color: $text-secondary;
     }
 
     .table-sm {

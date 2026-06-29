@@ -4,6 +4,14 @@
     <a routerLink="/tienda/productos/nuevo" class="btn btn-primary">Nuevo Producto</a>
   </div>
 
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  @if (loading) {
+    <div class="alert alert-info">Cargando productos...</div>
+  }
+
   <div class="filters-container">
     <div class="search-box">
       <input type="text" [(ngModel)]="searchText" placeholder="Buscar por nombre..." class="form-control">

@@ -1,6 +1,14 @@
 <div class="tienda-form-container">
   <h2>{{ isEditMode ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
 
+  @if (loading) {
+    <div class="alert alert-info">Cargando...</div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
   <form [formGroup]="productoForm" (ngSubmit)="guardar()" class="custom-form">
     
     <div class="form-group">

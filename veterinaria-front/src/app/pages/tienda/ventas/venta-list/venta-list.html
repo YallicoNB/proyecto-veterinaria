@@ -4,6 +4,14 @@
     <a routerLink="/tienda/ventas/nueva" class="btn btn-primary">Registrar Venta</a>
   </div>
 
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  @if (loading) {
+    <div class="alert alert-info">Cargando ventas...</div>
+  }
+
   <div class="table-container">
     <table class="table">
       <thead>
