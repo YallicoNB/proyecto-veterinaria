@@ -1,0 +1,47 @@
+<div class="cart-overlay" [class.open]="open()" (click)="close()"></div>
+
+<div class="cart-sidebar" [class.open]="open()">
+  <div class="cart-header">
+    <h3><i class="bi bi-cart"></i> Carrito ({{ itemCount() }})</h3>
+    <button class="btn-close" (click)="close()">&times;</button>
+  </div>
+
+  <div class="cart-body">
+    @if (items().length === 0) {
+      <div class="cart-empty">
+        <i class="bi bi-cart-x"></i>
+        <p>Tu carrito está vacío</p>
+      </div>
+    }
+
+    @for (item of items(); track item.productoId) {
+      <div class="cart-item">
+        <div class="item-info">
+          <span class="item-name">{{ item.nombre }}</span>
+          <span class="item-price">{{ item.precio | currency:'PEN' }}</span>
+        </div>
+        <div class="item-controls">
+          <div class="qty-control">
+            <button (click)="updateQty(item.productoId, item.cantidad - 1)" class="btn-qty">-</button>
+            <span class="qty-value">{{ item.cantidad }}</span>
+            <button (click)="updateQty(item.productoId, item.cantidad + 1)" class="btn-qty">+</button>
+          </div>
+          <span class="item-subtotal">{{ item.precio * item.cantidad | currency:'PEN' }}</span>
+          <button (click)="remove(item.productoId)" class="btn-remove" title="Eliminar">&times;</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (items().length > 0) {
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total</span>
+        <strong>{{ total() | currency:'PEN' }}</strong>
+      </div>
+      <button (click)="checkout()" class="btn btn-primary btn-block">
+        <i class="bi bi-credit-card"></i> Ir a Pagar
+      </button>
+    </div>
+  }
+</div>

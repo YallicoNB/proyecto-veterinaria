@@ -27,7 +27,7 @@
           <tr class="main-row">
             <td>{{ venta.id }}</td>
             <td>{{ venta.fecha | date:'short' }}</td>
-            <td>{{ venta.total | currency:'USD' }}</td>
+            <td>{{ venta.total | currency:'PEN' }}</td>
             <td>
               <button (click)="toggleRow(venta.id)" class="btn btn-sm btn-outline-info">
                 {{ isExpanded(venta.id) ? 'Ocultar Detalles' : 'Ver Detalles' }}
@@ -54,8 +54,8 @@
                         <tr>
                           <td>{{ detalle.nombreProducto }}</td>
                           <td>{{ detalle.cantidad }}</td>
-                          <td>{{ detalle.precioUnitario | currency:'USD' }}</td>
-                          <td>{{ detalle.subtotal | currency:'USD' }}</td>
+                          <td>{{ detalle.precioUnitario | currency:'PEN' }}</td>
+                          <td>{{ detalle.subtotal | currency:'PEN' }}</td>
                         </tr>
                       } @empty {
                         <tr><td colspan="4">No hay detalles registrados.</td></tr>

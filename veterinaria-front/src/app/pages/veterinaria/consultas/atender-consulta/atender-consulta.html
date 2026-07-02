@@ -12,7 +12,12 @@
     <div class="consulta-info">
       <div class="info-item">
         <span class="info-label">Mascota</span>
-        <span class="info-value">{{ consulta.nombreMascota }}</span>
+        <span class="info-value">
+          {{ consulta.nombreMascota }}
+          <a [routerLink]="['/veterinaria/historia', consulta.mascotaId]" class="link-hc" title="Ver Historia Clínica">
+            <i class="bi bi-file-text"></i> HC
+          </a>
+        </span>
       </div>
       <div class="info-item">
         <span class="info-label">Veterinario</span>

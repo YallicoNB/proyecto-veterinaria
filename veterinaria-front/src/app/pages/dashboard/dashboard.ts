@@ -1,13 +1,16 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { combineLatest, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { RouterLink } from '@angular/router';
 import { ProductoService } from '../tienda/productos/services/producto';
 import { LavanderiaService } from '../../core/services/lavanderia';
 import { AdopcionService } from '../adopcion/services/adopcion';
+import { AuthService } from '../../core/services/auth';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  imports: [CommonModule, RouterLink],
   templateUrl: './dashboard.html',
   styles: `
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; margin-bottom: 24px; }
@@ -18,6 +21,8 @@ import { AdopcionService } from '../adopcion/services/adopcion';
     .stat-icon.orange { background: #fff3e0; color: #e65100; }
     .stat-info h3 { margin: 0; font-size: 24px; font-weight: 500; }
     .stat-info p { margin: 2px 0 0; font-size: 13px; color: rgba(0,0,0,0.54); }
+    .stat-link { display: inline-block; margin-top: 6px; font-size: 13px; color: #2e7d32; text-decoration: none; }
+    .stat-link:hover { text-decoration: underline; }
     .welcome p { margin: 0 0 24px; color: rgba(0,0,0,0.54); }
   `
 })
@@ -25,12 +30,16 @@ export class Dashboard implements OnInit {
   private productoService = inject(ProductoService);
   private lavanderiaService = inject(LavanderiaService);
   private adopcionService = inject(AdopcionService);
+  private authService = inject(AuthService);
 
   totalProductos = 0;
   serviciosPendientes = 0;
   mascotasDisponibles = 0;
   loading = true;
   error = '';
+
+  get rol() { return this.authService.getRol(); }
+  get username() { return this.authService.getUsername(); }
 
   ngOnInit() {
     combineLatest([

@@ -53,6 +53,9 @@
               </span>
             </td>
             <td class="acciones">
+              <a [routerLink]="['/veterinaria/historia', consulta.mascotaId]" class="btn-sm btn-outline-info" title="Historia Clínica">
+                HC
+              </a>
               @if (consulta.estado === 'PENDIENTE') {
                 <a [routerLink]="['/veterinaria/consultas', consulta.id, 'atender']" class="btn-sm btn-success">
                   Atender

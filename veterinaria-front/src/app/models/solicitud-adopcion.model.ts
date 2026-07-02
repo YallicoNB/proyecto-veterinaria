@@ -6,6 +6,7 @@ export interface SolicitudAdopcion {
   estado: string;
   mascotaId: number;
   nombreMascota: string;
+  usuarioId: number;
 }
 
 export interface SolicitudAdopcionRequest {

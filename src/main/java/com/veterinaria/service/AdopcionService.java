@@ -25,6 +25,16 @@ public class AdopcionService {
         return mascotaRepo.findByDisponibleTrue();
     }
 
+    // Listar todas las solicitudes
+    public List<SolicitudAdopcion> listarSolicitudes() {
+        return solicitudRepo.findAll();
+    }
+
+    // Listar solicitudes de un usuario
+    public List<SolicitudAdopcion> listarPorUsuario(Long usuarioId) {
+        return solicitudRepo.findByUsuarioId(usuarioId);
+    }
+
     // Guardar una nueva solicitud
     public SolicitudAdopcion crearSolicitud(SolicitudAdopcion solicitud) {
         solicitud.setEstado("PENDIENTE");

@@ -1,0 +1,17 @@
+<div class="producto-card"
+     [style.border-left]="producto().stock <= 5 ? '4px solid #f44336' : '4px solid #4caf50'">
+  <h4>{{ producto().nombre }}</h4>
+  <p>Categoría: {{ producto().categoria }}</p>
+  <p>Precio: {{ producto().precio | currency:'PEN' }}</p>
+  <p [style.color]="producto().stock <= 10 ? '#f44336' : 'inherit'"
+     [style.fontWeight]="producto().stock <= 10 ? 'bold' : 'normal'">
+    Stock: {{ producto().stock }}
+  </p>
+  @if (esCliente()) {
+    <button (click)="onAgregarCarrito()" class="btn btn-sm btn-outline-primary">
+      <i class="bi bi-cart-plus"></i> Agregar
+    </button>
+  } @else {
+    <button (click)="onSeleccionar()" class="btn btn-sm btn-outline-primary">Seleccionar</button>
+  }
+</div>

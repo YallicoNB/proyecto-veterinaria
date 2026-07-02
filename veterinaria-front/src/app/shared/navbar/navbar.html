@@ -13,16 +13,68 @@
       <a routerLink="/dashboard" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:true}">
         <i class="bi bi-speedometer2"></i> Dashboard
       </a>
+
+      @if (auth.getRol() === 'ADMIN') {
+        <a routerLink="/usuarios" routerLinkActive="active-link">
+          <i class="bi bi-people"></i> Usuarios
+        </a>
+      }
+
+      @if (auth.getRol() === 'ADMIN' || auth.getRol() === 'VETERINARIO') {
+        <a routerLink="/mascotas" routerLinkActive="active-link">
+          <i class="bi bi-paw"></i> Mascotas
+        </a>
+        <a routerLink="/veterinaria/consultas" routerLinkActive="active-link">
+          <i class="bi bi-clipboard2-pulse"></i> Consultas
+        </a>
+        <a routerLink="/veterinaria/vacunas" routerLinkActive="active-link">
+          <i class="bi bi-eyedropper"></i> Vacunas
+        </a>
+        <a routerLink="/mascotas" routerLinkActive="active-link">
+          <i class="bi bi-file-text"></i> Historias Clínicas
+        </a>
+      }
+
+      @if (auth.getRol() === 'ADMIN' || auth.getRol() === 'CLIENTE_TIENDA') {
+        <a routerLink="/tienda/ventas" routerLinkActive="active-link">
+          <i class="bi bi-cart"></i> Ventas
+        </a>
+      }
+
+      @if (auth.getRol() === 'ADMIN' || auth.getRol() === 'EMPLEADO_LAVANDERIA') {
+        <a routerLink="/lavanderia/servicios" routerLinkActive="active-link">
+          <i class="bi bi-droplet"></i> Lavandería
+        </a>
+      }
     }
+
     <a routerLink="/tienda/productos" routerLinkActive="active-link">
       <i class="bi bi-box-seam"></i> Productos
     </a>
     <a routerLink="/adopcion/disponibles" routerLinkActive="active-link">
       <i class="bi bi-heart"></i> Adopción
     </a>
+      @if (auth.getRol() === 'ADMIN') {
+        <a routerLink="/adopcion/solicitudes" routerLinkActive="active-link">
+          <i class="bi bi-file-text"></i> Solicitudes
+        </a>
+      }
+      @if (auth.getRol() === 'CLIENTE_TIENDA') {
+        <a routerLink="/adopcion/mis-solicitudes" routerLinkActive="active-link">
+          <i class="bi bi-file-text"></i> Mis Solicitudes
+        </a>
+      }
   </nav>
 
   @if (auth.isAuthenticated()) {
+    @if (auth.getRol() === 'CLIENTE_TIENDA') {
+      <button class="cart-btn" (click)="openCart()">
+        <i class="bi bi-cart"></i>
+        @if (cartService.itemCount() > 0) {
+          <span class="cart-badge">{{ cartService.itemCount() }}</span>
+        }
+      </button>
+    }
     <div class="navbar-user">
       <i class="bi bi-person-circle"></i>
       <span class="username">{{ auth.getUsername() }}</span>
@@ -31,3 +83,4 @@
     </div>
   }
 </header>
+<app-cart-sidebar />

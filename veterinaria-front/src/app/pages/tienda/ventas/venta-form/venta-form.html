@@ -9,6 +9,10 @@
     <div class="alert alert-danger">{{ errorMessage }}</div>
   }
 
+  @if (successMessage) {
+    <div class="alert alert-success"><i class="bi bi-check-circle"></i> {{ successMessage }}</div>
+  }
+
   <form [formGroup]="ventaForm" (ngSubmit)="guardar()" class="custom-form">
     
     <div formArrayName="detalles" class="detalles-container">
@@ -23,7 +27,7 @@
               <option [ngValue]="null" disabled>Seleccione un producto</option>
               @for (prod of productos; track prod.id) {
                 <option [ngValue]="prod.id" [disabled]="prod.stock === 0">
-                  {{ prod.nombre }} - {{ prod.precio | currency:'USD' }} (Stock: {{ prod.stock }})
+                  {{ prod.nombre }} - {{ prod.precio | currency:'PEN' }} (Stock: {{ prod.stock }})
                 </option>
               }
             </select>
@@ -36,7 +40,7 @@
 
           <div class="form-group flex-1">
             <label>Subtotal</label>
-            <input type="text" [value]="detalle.get('subtotal')?.value | currency:'USD'" class="form-control" disabled>
+            <input type="text" [value]="detalle.get('subtotal')?.value | currency:'PEN'" class="form-control" disabled>
           </div>
 
           <div class="form-group actions">
@@ -51,7 +55,7 @@
     </div>
 
     <div class="total-section">
-      <h3>Total Venta: {{ totalVenta | currency:'USD' }}</h3>
+      <h3>Total Venta: {{ totalVenta | currency:'PEN' }}</h3>
     </div>
 
     <div class="form-actions">

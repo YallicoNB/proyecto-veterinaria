@@ -13,6 +13,7 @@ public class SolicitudAdopcionResponse {
     private String estado;
     private Long mascotaId;
     private String nombreMascota;
+    private Long usuarioId;
 
     public static SolicitudAdopcionResponse fromEntity(SolicitudAdopcion sa) {
         if (sa == null) return null;
@@ -22,6 +23,7 @@ public class SolicitudAdopcionResponse {
         dto.setTelefono(sa.getTelefono());
         dto.setMotivo(sa.getMotivo());
         dto.setEstado(sa.getEstado());
+        dto.setUsuarioId(sa.getUsuarioId());
         if (sa.getMascota() != null) {
             dto.setMascotaId(sa.getMascota().getId());
             dto.setNombreMascota(sa.getMascota().getNombre());

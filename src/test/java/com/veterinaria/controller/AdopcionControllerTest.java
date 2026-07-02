@@ -4,14 +4,19 @@ import com.veterinaria.model.MascotaAdoptable;
 import com.veterinaria.model.SolicitudAdopcion;
 import com.veterinaria.service.AdopcionService;
 import com.veterinaria.service.MascotaAdoptableService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +38,22 @@ class AdopcionControllerTest {
 
     @MockBean
     private MascotaAdoptableService mascotaAdoptableService;
+
+    private Jwt mockJwt;
+
+    @BeforeEach
+    void setUp() {
+        mockJwt = Jwt.withTokenValue("mock")
+                .header("alg", "none")
+                .claim("usuarioId", 1L)
+                .claim("rol", "CLIENTE_TIENDA")
+                .subject("juan")
+                .issuedAt(Instant.now())
+                .expiresAt(Instant.now().plusSeconds(3600))
+                .build();
+        SecurityContextHolder.getContext().setAuthentication(
+                new JwtAuthenticationToken(mockJwt, List.of()));
+    }
 
     @Test
     void getDisponibles_debeRetornar200() throws Exception {
@@ -68,6 +89,22 @@ class AdopcionControllerTest {
                         .content(json))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nombreSolicitante").value("Juan"));
+    }
+
+    @Test
+    void misSolicitudes_debeRetornar200() throws Exception {
+        SolicitudAdopcion solicitud = new SolicitudAdopcion();
+        solicitud.setId(1L);
+        solicitud.setNombreSolicitante("Juan");
+        solicitud.setUsuarioId(1L);
+        solicitud.setEstado("PENDIENTE");
+
+        when(adopcionService.listarPorUsuario(1L)).thenReturn(List.of(solicitud));
+
+        mockMvc.perform(get("/api/adopcion/mis-solicitudes"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].estado").value("PENDIENTE"))
+                .andExpect(jsonPath("$[0].usuarioId").value(1));
     }
 
     @Test

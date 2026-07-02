@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
-import { Rol } from '../../models/usuario.model';
+
 
 @Component({
   selector: 'app-register',
@@ -40,13 +40,10 @@ export class Register {
   error = '';
   success = false;
   loading = false;
-  roles = Object.values(Rol);
-
   form = this.fb.group({
     username: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(6)]],
-    email: ['', [Validators.required, Validators.email]],
-    rol: ['', Validators.required]
+    email: ['', [Validators.required, Validators.email]]
   });
 
   submit() {

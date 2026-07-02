@@ -26,6 +26,22 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard(['ADMIN'])],
   },
 
+  {
+    path: 'mascotas',
+    loadComponent: () => import('./pages/mascotas/mascota-list/mascota-list').then(m => m.MascotaList),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'mascotas/nuevo',
+    loadComponent: () => import('./pages/mascotas/mascota-form/mascota-form').then(m => m.MascotaForm),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'mascotas/:id/editar',
+    loadComponent: () => import('./pages/mascotas/mascota-form/mascota-form').then(m => m.MascotaForm),
+    canActivate: [authGuard],
+  },
+
   // Tienda
   {
     path: 'tienda',
@@ -62,6 +78,12 @@ export const routes: Routes = [
     path: 'adopcion/solicitudes',
     loadComponent: () =>
       import('./pages/adopcion/solicitud-list/solicitud-list').then((m) => m.SolicitudList),
+    canActivate: [authGuard, roleGuard(['ADMIN'])],
+  },
+  {
+    path: 'adopcion/mis-solicitudes',
+    loadComponent: () =>
+      import('./pages/adopcion/mis-solicitudes/mis-solicitudes').then((m) => m.MisSolicitudes),
     canActivate: [authGuard],
   },
 

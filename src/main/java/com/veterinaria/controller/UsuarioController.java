@@ -65,8 +65,11 @@ public class UsuarioController {
         if (usuarioService.existeUsername(request.getUsername())) {
             return ResponseEntity.badRequest().body(java.util.Map.of("error", "El usuario ya existe"));
         }
+        if (request.getPassword() == null || request.getPassword().isBlank()) {
+            return ResponseEntity.badRequest().body(java.util.Map.of("error", "La contraseña es obligatoria"));
+        }
         Usuario usuario = new Usuario(request.getUsername(), request.getPassword(),
-            request.getEmail(), request.getRol());
+            request.getEmail(), Rol.CLIENTE_TIENDA);
         usuario.setActivo(true);
         Usuario guardado = usuarioService.guardar(usuario);
         return ResponseEntity.ok(UsuarioResponse.fromEntity(guardado));

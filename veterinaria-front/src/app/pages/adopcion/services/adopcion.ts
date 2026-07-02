@@ -13,6 +13,10 @@ export class AdopcionService {
     return this.http.get<SolicitudAdopcion[]>(`${this.baseUrl}/solicitudes`);
   }
 
+  listarMisSolicitudes(): Observable<SolicitudAdopcion[]> {
+    return this.http.get<SolicitudAdopcion[]>(`${this.baseUrl}/mis-solicitudes`);
+  }
+
   listarDisponibles(): Observable<MascotaAdoptable[]> {
     return this.http.get<MascotaAdoptable[]>(`${this.baseUrl}/disponibles`);
   }

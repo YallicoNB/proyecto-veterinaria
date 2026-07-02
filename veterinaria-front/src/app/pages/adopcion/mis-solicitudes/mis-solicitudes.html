@@ -1,0 +1,38 @@
+<div class="container">
+  <h2 class="page-title"><i class="bi bi-file-text"></i> Mis Solicitudes de Adopción</h2>
+
+  @if (loading) {
+    <div class="alert alert-info">Cargando solicitudes...</div>
+  }
+
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  @if (!loading && solicitudes.length === 0) {
+    <div class="empty-state">
+      <i class="bi bi-inbox"></i>
+      <p>No has enviado ninguna solicitud aún.</p>
+      <a routerLink="/adopcion/disponibles" class="btn btn-primary">Ver mascotas disponibles</a>
+    </div>
+  }
+
+  @if (solicitudes.length > 0) {
+    <div class="solicitudes-list">
+      @for (s of solicitudes; track s.id) {
+        <div class="solicitud-card">
+          <div class="card-header">
+            <span class="mascota-name"><i class="bi bi-paw"></i> {{ s.nombreMascota }}</span>
+            <span class="estado-badge {{ estadoClass(s.estado) }}">
+              <i class="bi {{ estadoIcon(s.estado) }}"></i> {{ s.estado }}
+            </span>
+          </div>
+          <div class="card-body">
+            <p><strong>Motivo:</strong> {{ s.motivo }}</p>
+            <p><strong>Teléfono:</strong> {{ s.telefono }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,10 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
+import { CartService } from '../../core/services/cart';
+import { CartSidebar } from '../cart-sidebar/cart-sidebar';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, CartSidebar],
   templateUrl: './navbar.html',
   styles: `
     .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; height: 56px; padding: 0 16px; background: #2e7d32; color: white; }
@@ -18,6 +20,9 @@ import { AuthService } from '../../core/services/auth';
     .navbar-user .role-badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: rgba(255,255,255,0.2); text-transform: uppercase; }
     .navbar-user button { background: none; border: 1px solid rgba(255,255,255,0.5); color: white; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; transition: 0.2s; }
     .navbar-user button:hover { background: rgba(255,255,255,0.15); }
+    .cart-btn { position: relative; background: none; border: none; color: white; font-size: 22px; cursor: pointer; padding: 6px 10px; margin-right: 8px; border-radius: 4px; transition: 0.2s; }
+    .cart-btn:hover { background: rgba(255,255,255,0.15); }
+    .cart-badge { position: absolute; top: 0; right: 2px; background: #f44336; color: white; font-size: 10px; min-width: 16px; height: 16px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; padding: 0 4px; }
     .menu-toggle { display: none; background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 4px; margin-left: auto; }
     #menu-checkbox { display: none; }
 
@@ -33,9 +38,15 @@ import { AuthService } from '../../core/services/auth';
 })
 export class Navbar {
   auth = inject(AuthService);
+  cartService = inject(CartService);
+  cartSidebar = viewChild.required(CartSidebar);
   menuOpen = false;
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
+  }
+
+  openCart() {
+    this.cartSidebar().toggle();
   }
 }

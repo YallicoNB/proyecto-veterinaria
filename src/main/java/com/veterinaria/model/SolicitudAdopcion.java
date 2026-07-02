@@ -25,7 +25,9 @@ public class SolicitudAdopcion {
     @NotBlank(message = "El motivo es obligatorio")
     private String motivo;
 
-    private String estado = "PENDIENTE"; 
+    private String estado = "PENDIENTE";
+
+    private Long usuarioId;
 
     @ManyToOne
     @JoinColumn(name = "mascota_id")

@@ -25,6 +25,16 @@
       </div>
 
       <div class="form-group">
+        <label for="veterinarioId">Veterinario</label>
+        <select id="veterinarioId" formControlName="veterinarioId">
+          <option [value]="null">Sin asignar</option>
+          @for (vet of veterinarios; track vet.id) {
+            <option [value]="vet.id">{{ vet.username }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
         <label for="sintomas">Síntomas *</label>
         <textarea
           id="sintomas"

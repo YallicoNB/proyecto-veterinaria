@@ -1,8 +1,22 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductoService } from '../services/producto';
+
+export function precioValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (value === null || value === undefined || value === '') return null;
+    const num = Number(value);
+    if (isNaN(num)) return { precioInvalido: 'Debe ser un número válido' };
+    if (num <= 0) return { precioDebeSerPositivo: 'El precio debe ser mayor a 0' };
+    if (num > 999999.99) return { precioMuyAlto: 'El precio no puede exceder 999,999.99' };
+    const strVal = String(value);
+    if (strVal.includes('.') && strVal.split('.')[1].length > 2) return { maxDosDecimales: 'Máximo 2 decimales' };
+    return null;
+  };
+}
 
 @Component({
   selector: 'app-producto-form',
@@ -26,7 +40,7 @@ export class ProductoForm implements OnInit {
   ngOnInit(): void {
     this.productoForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.maxLength(100)]],
-      precio: [0, [Validators.required, Validators.min(0.1)]],
+      precio: [0, [Validators.required, precioValidator()]],
       stock: [0, [Validators.required, Validators.min(0)]],
       categoria: ['']
     });

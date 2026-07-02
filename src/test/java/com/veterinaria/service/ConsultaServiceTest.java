@@ -2,6 +2,7 @@ package com.veterinaria.service;
 
 import com.veterinaria.model.Consulta;
 import com.veterinaria.model.EstadoConsulta;
+import com.veterinaria.model.HistoriaClinica;
 import com.veterinaria.repository.ConsultaRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +22,9 @@ public class ConsultaServiceTest {
 
     @Mock
     private ConsultaRepository consultaRepository;
+
+    @Mock
+    private HistoriaClinicaService historiaClinicaService;
 
     @InjectMocks
     private ConsultaService consultaService;
@@ -57,6 +61,7 @@ public class ConsultaServiceTest {
     void testAtender_existeConsulta() {
         Consulta consulta = new Consulta();
         consulta.setEstado(EstadoConsulta.PENDIENTE);
+        consulta.setSintomas("Tos persistente");
 
         Consulta datos = new Consulta();
         datos.setDiagnostico("Infección");
@@ -64,6 +69,7 @@ public class ConsultaServiceTest {
 
         when(consultaRepository.findById(1L)).thenReturn(Optional.of(consulta));
         when(consultaRepository.save(consulta)).thenReturn(consulta);
+        when(historiaClinicaService.guardar(any(HistoriaClinica.class))).thenReturn(new HistoriaClinica());
 
         Optional<Consulta> resultado = consultaService.atender(1L, datos);
 

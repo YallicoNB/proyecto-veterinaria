@@ -1,0 +1,85 @@
+<div class="form-container">
+  <h2><i class="bi" [class.bi-pencil]="editando" [class.bi-plus-circle]="!editando"></i>
+    {{ editando ? 'Editar Mascota' : 'Nueva Mascota' }}</h2>
+
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  @if (loading && editando) {
+    <div class="alert alert-info">Cargando datos...</div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-group">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" formControlName="nombre" placeholder="Nombre de la mascota" />
+      @if (form.get('nombre')?.invalid && form.get('nombre')?.touched) {
+        <div class="form-error">El nombre es obligatorio</div>
+      }
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="tipo">Tipo</label>
+        <select id="tipo" formControlName="tipo">
+          <option value="" disabled>Selecciona</option>
+          @for (t of tipos; track t) {
+            <option [value]="t">{{ t }}</option>
+          }
+        </select>
+        @if (form.get('tipo')?.invalid && form.get('tipo')?.touched) {
+          <div class="form-error">Selecciona un tipo</div>
+        }
+      </div>
+      <div class="form-group">
+        <label for="sexo">Sexo</label>
+        <select id="sexo" formControlName="sexo">
+          <option value="" disabled>Selecciona</option>
+          @for (s of sexos; track s) {
+            <option [value]="s">{{ s }}</option>
+          }
+        </select>
+        @if (form.get('sexo')?.invalid && form.get('sexo')?.touched) {
+          <div class="form-error">Selecciona un sexo</div>
+        }
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="raza">Raza</label>
+      <input id="raza" formControlName="raza" placeholder="Ej: Labrador, Persa" />
+      @if (form.get('raza')?.invalid && form.get('raza')?.touched) {
+        <div class="form-error">La raza es obligatoria</div>
+      }
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="edad">Edad (años)</label>
+        <input id="edad" type="number" formControlName="edad" />
+      </div>
+      <div class="form-group">
+        <label for="peso">Peso (kg)</label>
+        <input id="peso" type="number" step="0.1" formControlName="peso" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="color">Color</label>
+      <input id="color" formControlName="color" placeholder="Ej: Dorado, Negro" />
+    </div>
+
+    <div class="form-group">
+      <label for="observaciones">Observaciones</label>
+      <input id="observaciones" formControlName="observaciones" placeholder="Opcional" />
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit" [disabled]="form.invalid || loading">
+        {{ editando ? 'Actualizar' : 'Guardar' }}
+      </button>
+      <a class="btn btn-cancel" routerLink="/mascotas">Cancelar</a>
+    </div>
+  </form>
+</div>

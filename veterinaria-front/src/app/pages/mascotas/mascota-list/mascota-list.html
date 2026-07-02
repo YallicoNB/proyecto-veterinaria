@@ -1,0 +1,63 @@
+<div class="page-header">
+  <h2><i class="bi bi-paw"></i> Mascotas</h2>
+  <a routerLink="/mascotas/nuevo" class="btn btn-primary">
+    <i class="bi bi-plus-lg"></i> Nueva Mascota
+  </a>
+</div>
+
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+
+@if (loading) {
+  <div class="alert alert-info">Cargando mascotas...</div>
+}
+
+<div class="table-container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Tipo</th>
+        <th>Raza</th>
+        <th>Edad</th>
+        <th>Sexo</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (m of mascotas; track m.id) {
+        <tr>
+          <td>{{ m.id }}</td>
+          <td><strong>{{ m.nombre }}</strong></td>
+          <td>{{ m.tipo }}</td>
+          <td>{{ m.raza }}</td>
+          <td>{{ m.edad }} año(s)</td>
+          <td>{{ m.sexo }}</td>
+          <td>
+            <span class="badge" [class.badge-activa]="m.estado === 'ACTIVA'" [class.badge-adoptada]="m.estado === 'ADOPTADA'">
+              {{ m.estado }}
+            </span>
+          </td>
+          <td class="actions">
+            <a [routerLink]="['/veterinaria/historia', m.id]" class="btn btn-sm btn-outline-info">
+              <i class="bi bi-file-text"></i> HC
+            </a>
+            <a [routerLink]="['/mascotas', m.id, 'editar']" class="btn btn-sm btn-outline-primary">
+              <i class="bi bi-pencil"></i> Editar
+            </a>
+            <button (click)="eliminar(m.id)" class="btn btn-sm btn-outline-danger">
+              <i class="bi bi-trash"></i> Eliminar
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="8" class="text-center">No hay mascotas registradas.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

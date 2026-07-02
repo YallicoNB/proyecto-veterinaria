@@ -7,6 +7,8 @@ import com.veterinaria.model.MascotaAdoptable;
 import com.veterinaria.model.SolicitudAdopcion;
 import com.veterinaria.service.AdopcionService;
 import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,8 +34,18 @@ public class AdopcionController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/solicitudes")
+    public List<SolicitudAdopcionResponse> listarSolicitudes() {
+        return adopcionService.listarSolicitudes()
+                .stream()
+                .map(SolicitudAdopcionResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
     @PostMapping("/solicitudes")
-    public SolicitudAdopcionResponse enviarSolicitud(@Valid @RequestBody SolicitudAdopcionRequest request) {
+    public SolicitudAdopcionResponse enviarSolicitud(
+            @Valid @RequestBody SolicitudAdopcionRequest request,
+            @AuthenticationPrincipal Jwt jwt) {
         MascotaAdoptable mascota = mascotaAdoptableService.buscarPorId(request.getMascotaId())
                 .orElseThrow(() -> new RuntimeException("Mascota no encontrada"));
         SolicitudAdopcion entity = new SolicitudAdopcion();
@@ -41,7 +53,17 @@ public class AdopcionController {
         entity.setNombreSolicitante(request.getNombreSolicitante());
         entity.setTelefono(request.getTelefono());
         entity.setMotivo(request.getMotivo());
+        entity.setUsuarioId(jwt.getClaim("usuarioId"));
         return SolicitudAdopcionResponse.fromEntity(adopcionService.crearSolicitud(entity));
+    }
+
+    @GetMapping("/mis-solicitudes")
+    public List<SolicitudAdopcionResponse> misSolicitudes(@AuthenticationPrincipal Jwt jwt) {
+        Long usuarioId = jwt.getClaim("usuarioId");
+        return adopcionService.listarPorUsuario(usuarioId)
+                .stream()
+                .map(SolicitudAdopcionResponse::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @PatchMapping("/solicitudes/{id}/estado")
