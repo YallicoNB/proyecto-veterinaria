@@ -2,11 +2,12 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Usuario, UsuarioRequest } from '../../models/usuario.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class UsuarioService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:8080/api/usuarios';
+  private baseUrl = `${environment.apiUrl}/usuarios`;
 
   listar(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.baseUrl}`);

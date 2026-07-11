@@ -3,11 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { MascotaAdoptable } from '../../../models/mascota-adoptable.model';
 import { SolicitudAdopcion, SolicitudAdopcionRequest } from '../../../models/solicitud-adopcion.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AdopcionService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:8080/api/adopcion';
+  private baseUrl = `${environment.apiUrl}/adopcion`;
 
   listarSolicitudes(): Observable<SolicitudAdopcion[]> {
     return this.http.get<SolicitudAdopcion[]>(`${this.baseUrl}/solicitudes`);

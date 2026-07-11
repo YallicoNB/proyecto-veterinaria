@@ -2,11 +2,12 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Consulta, ConsultaRequest, AtenderConsultaRequest, EstadoConsulta } from '../../models/consulta.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ConsultaService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:8080/api/veterinaria/consulta';
+  private baseUrl = `${environment.apiUrl}/veterinaria/consulta`;
 
   listar(estado?: EstadoConsulta): Observable<Consulta[]> {
     let params = new HttpParams();

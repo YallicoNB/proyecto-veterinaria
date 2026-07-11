@@ -2,11 +2,12 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Venta, VentaRequest } from '../../../../models/venta.model';
+import { environment } from '../../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class VentaService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:8080/api/tienda/ventas';
+  private baseUrl = `${environment.apiUrl}/tienda/ventas`;
 
   listar(): Observable<Venta[]> {
     return this.http.get<Venta[]>(`${this.baseUrl}`);

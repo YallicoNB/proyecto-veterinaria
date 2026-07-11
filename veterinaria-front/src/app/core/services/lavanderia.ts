@@ -2,11 +2,12 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ServicioLavado, ServicioLavadoRequest } from '../../models/servicio-lavado.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class LavanderiaService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:8080/api/lavanderia/servicio';
+  private baseUrl = `${environment.apiUrl}/lavanderia/servicio`;
 
   listar(): Observable<ServicioLavado[]> {
     return this.http.get<ServicioLavado[]>(this.baseUrl);

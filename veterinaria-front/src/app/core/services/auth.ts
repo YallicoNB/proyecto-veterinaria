@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { AuthResponse, LoginRequest, UsuarioRequest } from '../../models/usuario.model';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private baseUrl = 'http://localhost:8080/api/usuarios';
+  private baseUrl = `${environment.apiUrl}/usuarios`;
 
   login(data: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.baseUrl}/login`, data)
