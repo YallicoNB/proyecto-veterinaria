@@ -1,12 +1,24 @@
 # Proyecto Veterinaria - Clínica Veterinaria Multi-Servicio
 
-Este es un proyecto académico de una **clínica veterinaria** desarrollado con **Spring Boot** y **Java**. El sistema ofrece múltiples servicios:
+Este es un proyecto académico de una **clínica veterinaria full-stack** desarrollado con **Spring Boot** y **Angular 20**. El sistema ofrece múltiples servicios:
 
-- **Usuarios**: Registro y login con roles
-- **Veterinaria**: Consultas, vacunas e historias clínicas
+- **Usuarios**: Registro, login con roles y CRUD de usuarios
+- **Veterinaria**: Consultas, vacunas, historias clínicas y mascotas
 - **Lavandería**: Servicio de baño y limpieza para mascotas
-- **Adopción**: Gestión de mascotas en adopción
-- **Tienda**: Inventario y ventas de productos para mascotas
+- **Adopción**: Gestión de mascotas en adopción y solicitudes con seguimiento
+- **Tienda**: Productos, ventas y carrito de compras con Angular Signals
+
+---
+
+## 🌐 Despliegue
+
+| Servicio | URL |
+|----------|-----|
+| **Frontend (Vercel)** | [proyecto-veterinaria-gatj-pink.vercel.app](https://proyecto-veterinaria-gatj-pink.vercel.app) |
+| **Backend API (Render)** | [veterinaria-backend-ofnz.onrender.com](https://veterinaria-backend-ofnz.onrender.com) |
+| **Base de datos** | PostgreSQL en Neon.tech |
+
+> **Credenciales de prueba:** `admin` / `admin123`
 
 ---
 
@@ -14,13 +26,19 @@ Este es un proyecto académico de una **clínica veterinaria** desarrollado con 
 
 | Tecnología | Versión | Descripción |
 |------------|---------|-------------|
-| Java | 17+ | Lenguaje de programación |
-| Spring Boot | 3.2.0 | Framework principal |
+| Java | 21 | Lenguaje de programación |
+| Spring Boot | 3.2.0 | Framework backend |
 | Maven | 3.9+ | Gestión de dependencias |
-| H2 Database | - | Base de datos en memoria (desarrollo) |
-| Spring Security | - | Seguridad (configurada como permitAll) |
-| JWT | 0.12.3 | Tokens de autenticación |
+| MySQL / PostgreSQL | - | Bases de datos relacionales |
+| Spring Security + OAuth2 | - | Seguridad con JWT |
+| JWT (jjwt) | 0.12.3 | Tokens de autenticación |
 | JPA/Hibernate | - | ORM para base de datos |
+| Angular | 20.3 | Framework frontend (Standalone Components) |
+| Angular Material | 20.2 | Componentes de UI |
+| Bootstrap Icons | 1.13 | Iconos |
+| RxJS / Signals | - | Reactividad y estado |
+| Docker | - | Contenedores (Docker Compose) |
+| Nginx | - | Servidor web y reverse proxy |
 
 ---
 
@@ -313,26 +331,24 @@ git push origin master
 
 ---
 
-## Orden de Desarrollo (Modelo → Repositorio → Service → Controller)
+## Despliegue con Docker
 
-Para cada paso, el orden de implementación es:
+```bash
+# Construir y levantar todos los servicios
+docker compose up --build
 
-1. **Modelos/Entidades** - Definir las clases de la base de datos
-2. **Repositorios** - Crear la interfaz de acceso a datos
-3. **Servicios** - Implementar la lógica de negocio
-4. **Controladores** - Crear los endpoints REST
-
----
+# Acceder en http://localhost
+```
 
 ## Equipo de Desarrollo
 
 | Integrante | Rol | Módulo |
 |------------|-----|--------|
 | - | Desarrollador | Módulo de Usuarios (Completado) |
-| - | Desarrollador | Veterinaria (En progreso) |
-| - | Desarrollador | Lavandería (Pendiente) |
-| - | Desarrollador | Adopción (Pendiente) |
-| - | Desarrollador | Tienda (Pendiente) |
+| - | Desarrollador | Veterinaria (Completado) |
+| - | Desarrollador | Lavandería (Completado) |
+| - | Desarrollador | Adopción (Completado) |
+| - | Desarrollador | Tienda (Completado) |
 
 ---
 
