@@ -2,10 +2,9 @@
   <h2>{{ isEditMode ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
 
   <form [formGroup]="productoForm" (ngSubmit)="guardar()" class="custom-form">
-    
     <div class="form-group">
       <label for="nombre">Nombre</label>
-      <input id="nombre" type="text" formControlName="nombre" class="form-control">
+      <input id="nombre" type="text" formControlName="nombre" class="form-control" />
       @if (productoForm.get('nombre')?.invalid && productoForm.get('nombre')?.touched) {
         <small class="text-danger">El nombre es requerido (máx 100 caracteres).</small>
       }
@@ -13,7 +12,7 @@
 
     <div class="form-group">
       <label for="precio">Precio</label>
-      <input id="precio" type="number" step="0.01" formControlName="precio" class="form-control">
+      <input id="precio" type="number" step="0.01" formControlName="precio" class="form-control" />
       @if (productoForm.get('precio')?.invalid && productoForm.get('precio')?.touched) {
         <small class="text-danger">El precio debe ser mayor a 0.</small>
       }
@@ -21,7 +20,7 @@
 
     <div class="form-group">
       <label for="stock">Stock</label>
-      <input id="stock" type="number" formControlName="stock" class="form-control">
+      <input id="stock" type="number" formControlName="stock" class="form-control" />
       @if (productoForm.get('stock')?.invalid && productoForm.get('stock')?.touched) {
         <small class="text-danger">El stock no puede ser negativo.</small>
       }
@@ -29,7 +28,7 @@
 
     <div class="form-group">
       <label for="categoria">Categoría</label>
-      <input id="categoria" type="text" formControlName="categoria" class="form-control">
+      <input id="categoria" type="text" formControlName="categoria" class="form-control" />
     </div>
 
     <div class="form-actions">
@@ -38,6 +37,5 @@
       </button>
       <a routerLink="/tienda/productos" class="btn btn-secondary">Cancelar</a>
     </div>
-
   </form>
 </div>

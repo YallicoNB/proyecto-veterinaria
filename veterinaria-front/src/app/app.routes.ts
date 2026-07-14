@@ -27,9 +27,11 @@ export const routes: Routes = [
   },
 
   // Tienda
-  {
-    path: 'tienda',
-    loadChildren: () => import('./pages/tienda/tienda.routes').then((m) => m.TIENDA_ROUTES),
+  // Carga perezosa (Lazy Loading) del módulo Tienda.
+  // Cuando se navega a '/tienda', se carga dinámicamente tienda.routes.ts
+  { 
+    path: 'tienda', 
+    loadChildren: () => import('./pages/tienda/tienda.routes').then(m => m.TIENDA_ROUTES) 
   },
 
   // Veterinaria

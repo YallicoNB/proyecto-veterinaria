@@ -18,15 +18,15 @@
         @for (venta of ventas; track venta.id) {
           <tr class="main-row">
             <td>{{ venta.id }}</td>
-            <td>{{ venta.fecha | date:'short' }}</td>
-            <td>{{ venta.total | currency:'USD' }}</td>
+            <td>{{ venta.fecha | date: 'short' }}</td>
+            <td>{{ venta.total | currency: 'USD' }}</td>
             <td>
               <button (click)="toggleRow(venta.id)" class="btn btn-sm btn-outline-info">
                 {{ isExpanded(venta.id) ? 'Ocultar Detalles' : 'Ver Detalles' }}
               </button>
             </td>
           </tr>
-          
+
           @if (isExpanded(venta.id)) {
             <tr class="details-row">
               <td colspan="4">
@@ -46,11 +46,13 @@
                         <tr>
                           <td>{{ detalle.nombreProducto }}</td>
                           <td>{{ detalle.cantidad }}</td>
-                          <td>{{ detalle.precioUnitario | currency:'USD' }}</td>
-                          <td>{{ detalle.subtotal | currency:'USD' }}</td>
+                          <td>{{ detalle.precioUnitario | currency: 'USD' }}</td>
+                          <td>{{ detalle.subtotal | currency: 'USD' }}</td>
                         </tr>
                       } @empty {
-                        <tr><td colspan="4">No hay detalles registrados.</td></tr>
+                        <tr>
+                          <td colspan="4">No hay detalles registrados.</td>
+                        </tr>
                       }
                     </tbody>
                   </table>

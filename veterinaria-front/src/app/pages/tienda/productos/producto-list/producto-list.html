@@ -6,11 +6,16 @@
 
   <div class="filters-container">
     <div class="search-box">
-      <input type="text" [(ngModel)]="searchText" placeholder="Buscar por nombre..." class="form-control">
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Buscar por nombre..."
+        class="form-control"
+      />
     </div>
     <div class="filter-box">
       <label>
-        <input type="checkbox" [(ngModel)]="mostrarBajoStock" (change)="filtrarBajoStock()">
+        <input type="checkbox" [(ngModel)]="mostrarBajoStock" (change)="filtrarBajoStock()" />
         Mostrar solo bajo stock (<= 10)
       </label>
     </div>
@@ -29,20 +34,26 @@
         </tr>
       </thead>
       <tbody>
-        @for (producto of productos | filterProductos:searchText; track producto.id) {
+        @for (producto of productos | filterProductos: searchText; track producto.id) {
           <tr>
             <td>{{ producto.id }}</td>
             <td>{{ producto.nombre }}</td>
             <td>{{ producto.categoria }}</td>
-            <td>{{ producto.precio | currency:'USD' }}</td>
+            <td>{{ producto.precio | currency: 'USD' }}</td>
             <td>
               <span [class.text-danger]="producto.stock <= 10">
                 {{ producto.stock }}
               </span>
             </td>
             <td>
-              <a [routerLink]="['/tienda/productos', producto.id, 'editar']" class="btn btn-sm btn-outline-primary">Editar</a>
-              <button (click)="eliminarProducto(producto.id)" class="btn btn-sm btn-outline-danger">Eliminar</button>
+              <a
+                [routerLink]="['/tienda/productos', producto.id, 'editar']"
+                class="btn btn-sm btn-outline-primary"
+                >Editar</a
+              >
+              <button (click)="eliminarProducto(producto.id)" class="btn btn-sm btn-outline-danger">
+                Eliminar
+              </button>
             </td>
           </tr>
         } @empty {
